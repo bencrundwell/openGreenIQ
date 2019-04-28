@@ -1,60 +1,55 @@
-var mysql = require('mysql');
-var con;
+var mysql_conection = require('./mysql');
+var myEmitter = require('./my_emitter');
+
 var schedule;
-var intervalId;
 var watchdogInterval;
 
 // Constructor
 function Scheduler() {
     console.log('openGreenIQ.scheduler running...');
 
-    con = mysql.createConnection({
-        host: "ogiq",
-        user: "ogiq",
-        password: "ogiqp@55",
-        database: "db"
-    });
-    
-    con.connect(async function(err) {
-        if (err) throw err;
-        await updateSchedule();
-        updateClock();
-    });
+    updateClock();
 }
+
+myEmitter.on('minuteTimer', function() {
+    updateClock();
+});
 
 function updateClock() {
     var d = new Date();
     var timecode = (d.getHours() * 60) + d.getMinutes();
     console.log( "scheduler: Day " + d.getDay() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds() + " - (" + timecode + ")");
 
-    if (schedule) schedule.forEach(element => {
-        console.log(element);
-        if ((1 << d.getDay()) & element.days) {
-            //console.log("Day matches");
-            if (element.start_time == timecode) {
-                console.log("Schedule Match, water for " + element.duration + " secs");
-            }
-        }
+    temp_mysql = new mysql_conection(function(err, connection) {
+        if (err) throw err;
+        connection.query("SELECT * FROM schedule", function (err, result, fields) {
+            if (err) throw err;
+            console.log("scheduler: Schedule Updated from database");
+            schedule = result;
+            schedule.forEach(element => {
+                console.log(element);
+                if ((1 << d.getDay()) & element.days) {
+                    //console.log("Day matches");
+                    myEmitter.emit('schedule', element); // Test to always trigger an event, remove this line when finished testing
+                    if (element.start_time == timecode) {
+                        //console.log("Schedule Match, water for " + element.duration + " secs");
+                        myEmitter.emit('schedule', element);
+                    }
+                }
+            });
+        });
+        connection.release();
     });
 
-    updateSchedule();
+     
 
     clearInterval( watchdogInterval );
     watchdogInterval = setInterval( watchdogReset, 5 * 60 * 1000); // 5min watchdog timer
-
-    clearInterval( intervalId );
-    intervalId = setInterval( updateClock, 60000 - (d.getSeconds() * 1000) - d.getMilliseconds() + 500);
 }
 
-async function updateSchedule() {
-    console.log("scheduler: request new Schedule");
-    await con.query("SELECT * FROM schedule", function (err, result, fields) {
-        if (err) throw err;
-        console.log("scheduler: Schedule Updated from database");
-        schedule = result;
-    });
-    console.log("scheduler: end updateSchedule");
-}
+// function updateSchedule() {
+    
+// }
 
 function watchdogReset() {
     console.log("scheduler: ERROR - Watchdog timeout");
