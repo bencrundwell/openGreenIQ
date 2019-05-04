@@ -15,6 +15,8 @@ function everyMinute() {
 
     console.log('openGreenIQ.timer fire: minuteTimer');
     myEmitter.emit("minuteTimer");
+    console.log( "Day " + d.getDay() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds());
+
 
     if (d.getMinutes() == 0) {
         console.log('openGreenIQ.timer fire: hourTimer');
