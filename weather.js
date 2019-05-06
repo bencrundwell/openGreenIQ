@@ -50,5 +50,32 @@ myEmitter.on('hourTimer', function() {
     });
 });
 
+myEmitter.on('dayTimer', function() {
+    console.log('openGreenIQ.weather Store Historical Data...');
+    temp_mysql = new mysql_conection(function(err, connection) {
+        var rainfall_total = 0;
+        if (err) throw err;
+        connection.query(`SELECT * FROM db.rainfall`, function (err, result, fields) {
+            if (err) throw err;
+            result.forEach(element => {
+                if (element.rain > 0) {
+                    rainfall_total += element.rain;
+                }
+            });
+        });
+        var d = new Date();
+        d.setDate(d.getDate() - 1);
+        var yesterday = `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`;
+        console.log(`openGreenIQ.weather for yesterday: ${yesterday}...`);
+        connection.query(`INSERT INTO db.history (date, rainfall) VALUES ('${yesterday}', ${rainfall_total})`, function (err, result, fields) {
+            if (err) throw err;
+            console.log("openGreenIQ.weather : history added");
+        });
 
-myEmitter.emit('hourTimer');
+        connection.release();
+    });
+});
+
+
+
+//myEmitter.emit('dayTimer');
