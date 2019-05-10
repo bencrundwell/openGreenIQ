@@ -21,7 +21,7 @@ const port = 4000;
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.get('/schedule', (req, res) => {
+app.get('/api/schedule', (req, res) => {
   temp_mysql = new mysql_conection(function(err, connection) {
     if (err) throw err;
     connection.query("SELECT * FROM schedule", function (err, result, fields) {

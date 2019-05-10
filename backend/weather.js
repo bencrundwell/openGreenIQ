@@ -58,7 +58,7 @@ myEmitter.on('dayTimer', function() {
             if (err) throw err;
             
             var rainfall_total = 0;
-            
+
             result.forEach(element => {
                 if (element.rain > 0) {
                     rainfall_total += element.rain;
@@ -81,4 +81,4 @@ myEmitter.on('dayTimer', function() {
 
 
 
-myEmitter.emit('dayTimer');
+//myEmitter.emit('dayTimer');

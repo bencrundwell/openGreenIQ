@@ -7,13 +7,32 @@
 </template>
 
 <script>
-module.exports = {
-  data: function () {
+import APIService from './APIService';
+// const api = new APIService();
+
+export default {
+  data () {
     return {
-      schedule: 'Hello!'
+      schedule: 'Hello'
+    }
+  },
+  async created () {
+    this.getSchedule()
+  },
+  methods: {
+    async getSchedule() {
+      this.schedule = await APIService.getSchedule()
     }
   }
 }
+
+// module.exports = {
+//   data: function () {
+//     return {
+//       schedule: await APIService.getSchedule()
+//     }
+//   }
+// }
 </script>
 
 <style>
