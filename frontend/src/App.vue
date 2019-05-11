@@ -2,7 +2,9 @@
   <div id="app">
     <h1>openGreenIQ</h1>
     <h2>Schedule</h2>
-        <p>{{ schedule }}</p>
+    <p>{{ schedule }}</p>
+    <h2>History</h2>
+    <p>{{ history }}</p>
   </div>
 </template>
 
@@ -13,26 +15,27 @@ import APIService from './APIService';
 export default {
   data () {
     return {
-      schedule: 'Hello'
+      schedule: 'Hello',
+      history: 'test'
     }
   },
   async created () {
-    this.getSchedule()
+    this.getSchedule();
+    this.getRainfall();
+    this.getHistory();
   },
   methods: {
     async getSchedule() {
       this.schedule = await APIService.getSchedule()
+    },
+    async getRainfall() {
+      this.rainfall = await APIService.getRainfall()
+    },
+    async getHistory() {
+      this.history = await APIService.getHistory()
     }
   }
 }
-
-// module.exports = {
-//   data: function () {
-//     return {
-//       schedule: await APIService.getSchedule()
-//     }
-//   }
-// }
 </script>
 
 <style>
