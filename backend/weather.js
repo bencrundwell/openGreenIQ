@@ -48,17 +48,17 @@ myEmitter.on('hourTimer', function() {
 
             temp_mysql = new mysql_conection(function(err, connection) {
                 if (err) throw err;
-                connection.query(`UPDATE db.rainfall SET rain = ${rain}, cloud = ${cloud}, temp = ${weather.main.temp}, evapotranspiration = ${evapotranspiration} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
+                connection.query(`UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${weather.main.temp}, evapotranspiration = ${evapotranspiration} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
                     if (err) throw err;
                     console.log("openGreenIQ.weather : rain updated");
                 });
                 connection.release();
             });
 
-            // look up 24h worth of rainfall in rainfall table
+            // look up 24h worth of data in hourly table
             temp_mysql2 = new mysql_conection(function(err, connection) {
                 if (err) throw err;
-                connection.query(`SELECT * FROM db.rainfall`, function (err, result, fields) {
+                connection.query(`SELECT * FROM db.hourly`, function (err, result, fields) {
                     if (err) throw err;
                     
                     var rainfall_total = 0;
