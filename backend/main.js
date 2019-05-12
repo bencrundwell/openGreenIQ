@@ -1,8 +1,8 @@
 var myEmitter = require('./my_emitter');
-// var watering = require('./watering');
-//var scheduler_module = require('./scheduler');
+var watering = require('./watering');
+var scheduler_module = require('./scheduler');
 var timers_module = require('./timers');
-// var weather = require('./weather');
+var weather = require('./weather');
 var api = require('./api');
 var mysql_conection = require('./mysql');
 

@@ -104,5 +104,5 @@ myEmitter.on('dayTimer', function() {
     }, 10000);
 });
 
-myEmitter.emit('hourTimer');
-myEmitter.emit('dayTimer');
+//myEmitter.emit('hourTimer');
+//myEmitter.emit('dayTimer');
