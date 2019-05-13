@@ -30,6 +30,7 @@ function clearZones() {
     v4.writeSync(0);
     v5.writeSync(0);
     v6.writeSync(0);
+    console.log("watering: Stop watering in all zones");
 }
 
 function waterZone(zone, duration) {
@@ -59,5 +60,5 @@ function waterZone(zone, duration) {
     clearTimeout( timer );
     timer = setTimeout( function (){
         clearZones();
-    }, 1000);
+    }, 1000 * duration);
 }
