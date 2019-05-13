@@ -64,7 +64,7 @@
       <tbody>
         <tr v-for="item in hourly" :key="item.id">
           <td>
-            {{ (item.id-1).toString().padStart(2, '0') }}
+            {{ (item.id-1).toString().padStart(2, '0') }}00
           </td>
           <td>{{ item.rainfall }}</td>
           <td>{{ item.cloud }}%</td>
