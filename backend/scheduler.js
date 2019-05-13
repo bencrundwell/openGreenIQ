@@ -30,7 +30,7 @@ function updateClock() {
                 console.log(element);
                 if ((1 << d.getDay()) & element.days) {
                     //console.log("Day matches");
-                    myEmitter.emit('schedule', element); // Test to always trigger an event, remove this line when finished testing
+                    //myEmitter.emit('schedule', element); // Test to always trigger an event, remove this line when finished testing
                     if (element.start_time == timecode) {
                         //console.log("Schedule Match, water for " + element.duration + " secs");
                         myEmitter.emit('schedule', element);

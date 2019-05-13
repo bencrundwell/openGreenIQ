@@ -10,16 +10,54 @@ const v5 = new Gpio(22, 'out');
 const v6 = new Gpio(23, 'out');
 const lights = new Gpio(25, 'out');
 
-master.writeSync(0);
-v1.writeSync(0);
-v2.writeSync(0);
-v3.writeSync(0);
-v4.writeSync(0);
-v5.writeSync(0);
-v6.writeSync(0);
+var timer;
+
+clearZones()
 lights.writeSync(0);
 
 myEmitter.on('schedule', function(schedule_row) {
-    console.log("watering: Start watering in zone " + schedule_row.zone + " for " + schedule_row.duration + " minutes");
+    console.log("watering: Start watering in zone " + schedule_row.zone + " for " + schedule_row.duration + " seconds");
     console.log(schedule_row);
+    waterZone(schedule_row.zone, schedule_row.duration);
+    
 });
+
+function clearZones() {
+    master.writeSync(0);
+    v1.writeSync(0);
+    v2.writeSync(0);
+    v3.writeSync(0);
+    v4.writeSync(0);
+    v5.writeSync(0);
+    v6.writeSync(0);
+}
+
+function waterZone(zone, duration) {
+    master.writeSync(1);
+
+    switch (zone) {
+        case 1:
+            v1.writeSync(1);
+            break
+        case 2:
+            v2.writeSync(1);
+            break
+        case 3:
+            v3.writeSync(1);
+            break
+        case 4:
+            v4.writeSync(1);
+            break
+        case 5:
+            v5.writeSync(1);
+            break
+        case 6:
+            v6.writeSync(1);
+            break
+    }
+
+    clearTimeout( timer );
+    timer = setTimeout( function (){
+        clearZones();
+    }, 1000);
+}
