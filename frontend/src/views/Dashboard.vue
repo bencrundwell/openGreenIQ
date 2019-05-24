@@ -19,21 +19,35 @@
       </b-row>
       <main-chart-example chartId="main-chart-01" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
     </b-card>
+    
+    <b-card>
+      {{ schedule }}
+    </b-card>
   </div>
 </template>
  
 <script>
 import MainChartExample from './dashboard/MainChartExample'
+import { mapState } from 'vuex'
 
 export default {
   name: 'dashboard',
   components: {
     MainChartExample
   },
+
+  mounted () {
+    this.$store.dispatch('getSchedule')
+  },
+
   data: function () {
     return {
       selected: 'Month'
     }
-  }
+  },
+
+  computed: mapState([
+    'schedule'
+  ])
 }
 </script>
