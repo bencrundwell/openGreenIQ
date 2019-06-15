@@ -28,9 +28,10 @@ function updateClock() {
             schedule = result;
             schedule.forEach(element => {
                 //console.log(element);
-                const days_mask = (element.day_mon << 6) + (element.day_tue << 5) + (element.day_wed << 4) + (element.day_thu << 3) + (element.day_fri << 2) + (element.day_sat << 1) + (element.day_sun);
-                console.log(`days_mask: ${days_mask}`);
+                const days_mask = (element.day_mon << 0) + (element.day_tue << 1) + (element.day_wed << 2) + (element.day_thu << 3) + (element.day_fri << 4) + (element.day_sat << 5) + (element.day_sun << 6);
+                console.log(`scheduler: days_mask: ${days_mask}`);
                 if ((1 << d.getDay()) & days_mask) {
+                    console.log("scheduler: Days Match");
                     //myEmitter.emit('watering', element); // Test to always trigger an event, remove this line when finished testing
                     if (element.start_time == timecode) {
                         myEmitter.emit('watering', element);
