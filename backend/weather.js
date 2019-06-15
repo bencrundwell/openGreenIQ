@@ -31,6 +31,9 @@ myEmitter.on('hourTimer', function() {
             console.log (`evapotranspiration = ${evapotranspiration}mm/day`);
             return request(ow_url);
         })
+        .catch (error => {
+            console.log('irrisat error: ' + error);
+        })
         .then (function (body) {
             var d = new Date();
             console.log('body:', body);

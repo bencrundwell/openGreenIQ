@@ -20,14 +20,14 @@
       <main-chart-example chartId="main-chart-01" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
     </b-card>
     
-    <b-card>
-      {{ schedule }}
+    <b-card v-for="entry in schedule" :key="entry.id">
+      {{ entry }}
     </b-card>
   </div>
 </template>
  
 <script>
-import MainChartExample from './dashboard/MainChartExample'
+import MainChartExample from './dashboard/WateringChart'
 import { mapState } from 'vuex'
 
 export default {
@@ -37,12 +37,12 @@ export default {
   },
 
   mounted () {
-    this.$store.dispatch('getSchedule')
+    this.$store.dispatch('getHistory')
   },
 
   data: function () {
     return {
-      selected: 'Month'
+      selected: 'Week'
     }
   },
 

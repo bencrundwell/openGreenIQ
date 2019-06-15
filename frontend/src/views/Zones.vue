@@ -4,9 +4,9 @@
     header-tag="header"
     footer-tag="footer">
       <div slot="header">
-          <h4 class="card-title mb-0">Watering Schedule</h4>
+          <h4 class="card-title mb-0">Zones</h4>
       </div>
-      <b-table striped hover :items="schedule"></b-table>
+      <b-table striped hover :items="zones"></b-table>
     </b-card>
   </div>
 </template>
@@ -15,12 +15,12 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'schedule',
+  name: 'zones',
   mounted () {
-    this.$store.dispatch('getSchedule')
+    this.$store.dispatch('getZones')
   },
   computed: mapState([
-    'schedule'
+    'zones'
   ])
 }
 </script>

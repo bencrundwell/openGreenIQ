@@ -24,6 +24,7 @@ api.setup(app);
 api.getTable(app, "schedule");
 api.getTable(app, "history");
 api.getTable(app, "hourly");
+api.getTable(app, "zones");
 
 
 app.listen(port, () => console.log(`listening on port ${port}!`));

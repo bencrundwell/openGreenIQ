@@ -5,6 +5,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 const Dashboard = () => import('@/views/Dashboard')
 const Schedule = () => import('@/views/Schedule')
+const Zones = () => import('@/views/Zones')
 
 Vue.use(Router)
 
@@ -28,6 +29,11 @@ export default new Router({
           path: 'schedule',
           name: 'Schedule',
           component: Schedule
+        },
+        {
+          path: 'zones',
+          name: 'Zones',
+          component: Zones
         }
       ]
     }

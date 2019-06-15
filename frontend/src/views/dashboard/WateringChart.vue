@@ -3,6 +3,7 @@ import { Line } from 'vue-chartjs'
 import { getStyle, hexToRgba } from '@coreui/coreui/dist/js/coreui-utilities'
 import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { random } from '@/shared/utils'
+var moment = require('moment');
 
 export default {
   extends: Line,
@@ -12,46 +13,42 @@ export default {
     const brandInfo = getStyle('--info') || '#20a8d8'
     const brandDanger = getStyle('--danger') || '#f86c6b'
 
-    let elements = 27
-    const data1 = []
-    const data2 = []
-    const data3 = []
+    let elements = 7
+    const temperatureData = []
+    const labels = []
+
+    let options = []
+    
+    this.$store.dispatch('getHistory')
+      .then( d => {
+        for (let i = 0; i <= elements; i++) {
+            temperatureData[i] = this.$store.state.history[i]
+            //temperatureData.push(0)
+            labels[i] = moment().subtract(i, "days").format("ddd")
+          }
+
+        this.renderChart({
+          labels,
+          datasets: [
+            {
+              label: 'Temperature',
+              backgroundColor: hexToRgba(brandInfo, 10),
+              borderColor: brandInfo,
+              pointHoverBackgroundColor: '#fff',
+              borderWidth: 2,
+              data: temperatureData
+            }
+          ]
+        }, options)
+      })
 
     for (let i = 0; i <= elements; i++) {
-      data1.push(random(50, 200))
-      data2.push(random(80, 100))
-      data3.push(65)
+      // temperatureData.push(random(50, 200))
+      temperatureData.push(0)
+      labels.push(moment().subtract(i, "days").format("ddd"))
     }
-    this.renderChart({
-      labels: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
-      datasets: [
-        {
-          label: 'My First dataset',
-          backgroundColor: hexToRgba(brandInfo, 10),
-          borderColor: brandInfo,
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 2,
-          data: data1
-        },
-        {
-          label: 'My Second dataset',
-          backgroundColor: 'transparent',
-          borderColor: brandSuccess,
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 2,
-          data: data2
-        },
-        {
-          label: 'My Third dataset',
-          backgroundColor: 'transparent',
-          borderColor: brandDanger,
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 1,
-          borderDash: [8, 5],
-          data: data3
-        }
-      ]
-    }, {
+
+    options = {
       tooltips: {
         enabled: false,
         custom: CustomTooltips,
@@ -94,7 +91,21 @@ export default {
           hoverBorderWidth: 3
         }
       }
-    })
+    }
+
+    this.renderChart({
+      labels,
+      datasets: [
+        {
+          label: 'Temperature',
+          backgroundColor: hexToRgba(brandInfo, 10),
+          borderColor: brandInfo,
+          pointHoverBackgroundColor: '#fff',
+          borderWidth: 2,
+          data: temperatureData
+        }
+      ]
+    }, options)
   }
 }
 </script>
