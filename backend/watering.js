@@ -15,11 +15,10 @@ var timer;
 clearZones()
 lights.writeSync(0);
 
-myEmitter.on('schedule', function(schedule_row) {
+myEmitter.on('watering', function(schedule_row) {
     console.log("watering: Start watering in zone " + schedule_row.zone + " for " + schedule_row.duration + " seconds");
     console.log(schedule_row);
-    waterZone(schedule_row.zone, schedule_row.duration);
-    
+    // waterZone(schedule_row.zone, schedule_row.duration);
 });
 
 function clearZones() {
@@ -34,28 +33,29 @@ function clearZones() {
 }
 
 function waterZone(zone, duration) {
+    if (duration < 1 || duration > (60 * 20)) break;
     master.writeSync(1);
 
-    switch (zone) {
-        case 1:
-            v1.writeSync(1);
-            break
-        case 2:
-            v2.writeSync(1);
-            break
-        case 3:
-            v3.writeSync(1);
-            break
-        case 4:
-            v4.writeSync(1);
-            break
-        case 5:
-            v5.writeSync(1);
-            break
-        case 6:
-            v6.writeSync(1);
-            break
-    }
+    // switch (zone) {
+    //     case 1:
+    //         v1.writeSync(1);
+    //         break
+    //     case 2:
+    //         v2.writeSync(1);
+    //         break
+    //     case 3:
+    //         v3.writeSync(1);
+    //         break
+    //     case 4:
+    //         v4.writeSync(1);
+    //         break
+    //     case 5:
+    //         v5.writeSync(1);
+    //         break
+    //     case 6:
+    //         v6.writeSync(1);
+    //         break
+    // }
 
     clearTimeout( timer );
     timer = setTimeout( function (){

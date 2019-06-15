@@ -12,8 +12,10 @@ var bodyParser = require('body-parser');
 const morgan = require('morgan');
 
 var timers = new timers_module();
+console.log("**** Start openGreenIQ Server ****");
 
 const app = express();
+console.log("Express Server Running...");
 
 app.use(morgan('tiny'));
 app.use(bodyParser.json());

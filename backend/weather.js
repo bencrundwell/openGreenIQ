@@ -13,6 +13,7 @@ var evapotranspiration = 0;
 var rainfall_24h = 0;
 var cloud_24h = 0;
 var evapotranspiration_24h = 0;
+var temp = 0;
 
 myEmitter.on('hourTimer', function() {
 
@@ -39,12 +40,14 @@ myEmitter.on('hourTimer', function() {
             console.log('body:', body);
             var weather = JSON.parse(body);
             var rain = 0.0;
-            var cloud = 0;            
+            var cloud = 0;
 
             if (weather.rain)
                 if (weather.rain[ "1h" ])
                     rain = weather.rain[ "1h" ];
             console.log( "rain:", rain, "mm");
+
+            if (weather.main.temp) temp = weather.main.temp
 
             if (weather.clouds.all)
                 cloud = weather.clouds.all;
@@ -98,7 +101,7 @@ myEmitter.on('dayTimer', function() {
         console.log(`openGreenIQ.weather for yesterday: ${yesterday}...`);
         
         temp_mysql = new mysql_conection(function(err, connection) {
-            connection.query(`INSERT INTO db.history (date, rainfall, evapotranspiration, cloud) VALUES ('${yesterday}', ${rainfall_24h}, ${evapotranspiration_24h}, ${cloud_24h})`, function (err, result, fields) {
+            connection.query(`INSERT INTO db.history (date, rainfall, evapotranspiration, cloud, temp) VALUES ('${yesterday}', ${rainfall_24h}, ${evapotranspiration_24h}, ${cloud_24h}, ${temp})`, function (err, result, fields) {
                 if (err) throw err;
                 console.log("openGreenIQ.weather : history added");
             });

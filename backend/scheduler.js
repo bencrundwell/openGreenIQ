@@ -28,20 +28,17 @@ function updateClock() {
             schedule = result;
             schedule.forEach(element => {
                 console.log(element);
-                if ((1 << d.getDay()) & element.days) {
-                    //console.log("Day matches");
-                    //myEmitter.emit('schedule', element); // Test to always trigger an event, remove this line when finished testing
+                const days_mask = (element.day_mon << 6) + (element.day_tue << 5) + (element.day_wed << 4) + (element.day_thu << 3) + (element.day_fri << 2) + (element.day_sat << 1) + (element.day_sun);
+                if ((1 << d.getDay()) & days_mask) {
+                    //myEmitter.emit('watering', element); // Test to always trigger an event, remove this line when finished testing
                     if (element.start_time == timecode) {
-                        //console.log("Schedule Match, water for " + element.duration + " secs");
-                        myEmitter.emit('schedule', element);
+                        myEmitter.emit('watering', element);
                     }
                 }
             });
         });
         connection.release();
     });
-
-     
 
     clearInterval( watchdogInterval );
     watchdogInterval = setInterval( watchdogReset, 5 * 60 * 1000); // 5min watchdog timer
