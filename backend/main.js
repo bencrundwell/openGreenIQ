@@ -21,7 +21,7 @@ app.use(cors());
 const port = 4000;
 
 api.setup(app);
-api.getTable(app, "schedule");
+api.getSchedule(app);
 api.getTable(app, "history");
 api.getTable(app, "hourly");
 api.getTable(app, "zones");

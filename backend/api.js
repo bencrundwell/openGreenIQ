@@ -20,6 +20,26 @@ module.exports = {
             connection.release();
             });
         });
+    },
+    getSchedule: function(app) {
+        app.get('/api/schedule', (req, res) => {
+            temp_mysql = new mysql_conection(function(err, connection) {
+            if (err) throw err;
+            const query = `SELECT schedule.id, zones.name, schedule.days, schedule.start_time, schedule.duration 
+                FROM schedule
+                INNER JOIN zones ON schedule.zone=zones.id;`;
+            connection.query(query, function (err, result, fields) {
+                if (err) {
+                    res.status(400).send("Error when reading database");
+                }
+                else
+                {
+                    res.json(result);
+                }
+            });
+            connection.release();
+            });
+        });
     }
 
 }
