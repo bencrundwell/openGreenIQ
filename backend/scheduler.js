@@ -24,14 +24,14 @@ function updateClock() {
         if (err) throw err;
         connection.query("SELECT * FROM schedule", function (err, result, fields) {
             if (err) throw err;
-            console.log("scheduler: Schedule Updated from database");
+            //console.log("scheduler: Schedule Updated from database");
             schedule = result;
             schedule.forEach(element => {
                 //console.log(element);
                 const days_mask = (element.day_sun) + (element.day_mon << 1) + (element.day_tue << 2) + (element.day_wed << 3) + (element.day_thu << 4) + (element.day_fri << 5) + (element.day_sat << 6);
-                console.log(`scheduler: days_mask: ${days_mask} & ${(1 << d.getDay())}`);
+                //console.log(`scheduler: days_mask: ${days_mask} & ${(1 << d.getDay())}`);
                 if ((1 << d.getDay()) & days_mask) {
-                    console.log("scheduler: Days Match");
+                    //console.log("scheduler: Days Match");
                     //myEmitter.emit('watering', element); // Test to always trigger an event, remove this line when finished testing
                     if (element.start_time == timecode) {
                         myEmitter.emit('watering', element);
