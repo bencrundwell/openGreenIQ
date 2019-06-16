@@ -28,7 +28,7 @@ function updateClock() {
             schedule = result;
             schedule.forEach(element => {
                 //console.log(element);
-                const days_mask = (element.day_mon << 1) + (element.day_tue << 2) + (element.day_wed << 3) + (element.day_thu << 4) + (element.day_fri << 5) + (element.day_sat << 6) + (element.day_sun << 7);
+                const days_mask = (element.day_sun) + (element.day_mon << 1) + (element.day_tue << 2) + (element.day_wed << 3) + (element.day_thu << 4) + (element.day_fri << 5) + (element.day_sat << 6);
                 console.log(`scheduler: days_mask: ${days_mask} & ${(1 << d.getDay())}`);
                 if ((1 << d.getDay()) & days_mask) {
                     console.log("scheduler: Days Match");

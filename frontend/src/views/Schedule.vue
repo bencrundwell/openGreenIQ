@@ -21,13 +21,13 @@
         <tr v-for="item in schedule" :key="item.id">
           <td>{{ item.name }}</td>
           <td>
-            <span v-if="item.days_decode.mon">M </span>
-            <span v-if="item.days_decode.tue">Tu </span>
-            <span v-if="item.days_decode.wed">W </span>
-            <span v-if="item.days_decode.thu">Th </span>
-            <span v-if="item.days_decode.fri">F </span>
-            <span v-if="item.days_decode.sat">Sa </span>
-            <span v-if="item.days_decode.sun">Su </span>
+            <span v-if="item.day_mon">M </span>
+            <span v-if="item.day_tue">Tu </span>
+            <span v-if="item.day_wed">W </span>
+            <span v-if="item.day_thu">Th </span>
+            <span v-if="item.day_fri">F </span>
+            <span v-if="item.day_sat">Sa </span>
+            <span v-if="item.day_sun">Su </span>
           </td>
           <td class="text-center">{{ Math.floor(item.start_time/60) }}:{{ (item.start_time%60).toString().padStart(2, '0') }}</td>
           <td class="text-center">{{ item.duration/60 }}:{{ (item.duration%60).toString().padStart(2, '0') }}</td>
