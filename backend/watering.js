@@ -16,7 +16,7 @@ clearZones()
 lights.writeSync(0);
 
 myEmitter.on('watering', function(schedule_row) {
-    console.log("watering: Start watering in zone " + schedule_row.zone + " for " + schedule_row.duration + " seconds");
+    console.log("watering: Start watering the following schedule");
     console.log(schedule_row);
     // waterZone(schedule_row.zone, schedule_row.duration);
 });

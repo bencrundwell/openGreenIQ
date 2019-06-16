@@ -23,10 +23,11 @@ app.use(cors());
 const port = 4000;
 
 api.setup(app);
-api.getSchedule(app);
+// api.getSchedule(app);
 api.getTable(app, "history");
 api.getTable(app, "hourly");
 api.getTable(app, "zones");
+api.getTable(app, "schedule");
 
 
 app.listen(port, () => console.log(`listening on port ${port}!`));

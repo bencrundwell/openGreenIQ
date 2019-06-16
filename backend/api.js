@@ -27,7 +27,7 @@ module.exports = {
             if (err) throw err;
             const query = `SELECT schedule.id, zones.name, schedule.days, schedule.start_time, schedule.duration 
                 FROM schedule
-                INNER JOIN zones ON schedule.zone=zones.id;`;
+                INNER JOIN zones ON schedule.zone=zones.pin;`;
             connection.query(query, function (err, result, fields) {
                 if (err) {
                     res.status(400).send("Error when reading database");
