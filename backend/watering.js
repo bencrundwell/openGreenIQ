@@ -21,6 +21,10 @@ myEmitter.on('watering', function(schedule_row) {
     // waterZone(schedule_row.zone, schedule_row.duration);
 });
 
+myEmitter.on('water_zone', function(message) {
+    waterZone(message.zone, message.duration);
+});
+
 function clearZones() {
     master.writeSync(0);
     v1.writeSync(0);
@@ -33,7 +37,8 @@ function clearZones() {
 }
 
 function waterZone(zone, duration) {
-    if (duration < 1 || duration > (60 * 20)) break;
+    console.log(`watering: water zone ${zone} for ${duration} seconds`);
+    if (duration < 1 || duration > (60 * 20)) return;
     master.writeSync(1);
 
     // switch (zone) {

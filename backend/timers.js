@@ -13,21 +13,21 @@ function Timers() {
 function everyMinute() {
     var d = new Date();
 
-    console.log('openGreenIQ.timer fire: minuteTimer');
+    // console.log('openGreenIQ.timer fire: minuteTimer');
     myEmitter.emit("minuteTimer");
-    console.log( "Day " + d.getDay() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds());
+    //console.log( "Day " + d.getDay() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds());
 
 
     if (d.getMinutes() == 0) {
-        console.log('openGreenIQ.timer fire: hourTimer');
+        // console.log('openGreenIQ.timer fire: hourTimer');
         myEmitter.emit("hourTimer");
         
         if (d.getHours() == 0) {
-            console.log('openGreenIQ.timer fire: dayTimer');
+            // console.log('openGreenIQ.timer fire: dayTimer');
             myEmitter.emit("dayTimer");
 
             if (d.getDay() == 0) {
-                console.log('openGreenIQ.timer fire: weekTimer');
+                // console.log('openGreenIQ.timer fire: weekTimer');
                 myEmitter.emit("weekTimer");
             }
         }

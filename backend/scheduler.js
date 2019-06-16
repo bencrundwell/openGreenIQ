@@ -18,7 +18,7 @@ myEmitter.on('minuteTimer', function() {
 function updateClock() {
     var d = new Date();
     var timecode = (d.getHours() * 60) + d.getMinutes();
-    console.log( "scheduler: Day " + d.getDay() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + "." + d.getMilliseconds() + " - (" + timecode + ")");
+    console.log( "scheduler: Day " + d.getDay() + " " + d.getHours() + ":" + d.getMinutes().toString().padStart(2, '0') + ":" + d.getSeconds().toString().padStart(2, '0') + "." + d.getMilliseconds().toString().padStart(3, '0') + " - (" + timecode + ")");
 
     temp_mysql = new mysql_conection(function(err, connection) {
         if (err) throw err;

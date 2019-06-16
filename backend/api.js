@@ -1,4 +1,6 @@
+const util = require('util')
 var mysql_conection = require('./mysql');
+var myEmitter = require('./my_emitter');
 
 module.exports = {
     setup: function(app) {
@@ -40,6 +42,16 @@ module.exports = {
             connection.release();
             });
         });
+    },
+    postWater: function(app) {
+        app.post('/api/water', (req, res) => {
+            console.log("API: POST to /api/water");
+            console.log(`API: req.body:`);
+            console.log(util.inspect(req.body, {showHidden: false, depth: null}))
+            if (req.body.zone && req.body.duration) {
+                const message = req.body;
+                myEmitter.emit('water_zone', message);
+            }
+        });
     }
-
 }

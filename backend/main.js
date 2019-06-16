@@ -28,6 +28,7 @@ api.getTable(app, "history");
 api.getTable(app, "hourly");
 api.getTable(app, "zones");
 api.getTable(app, "schedule");
+api.postWater(app);
 
 
 app.listen(port, () => console.log(`listening on port ${port}!`));
