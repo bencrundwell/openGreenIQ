@@ -3,8 +3,8 @@
     <AppHeader fixed>
       <SidebarToggler class="d-lg-none" display="md" mobile />
       <b-link class="navbar-brand" to="#">
-        <img class="navbar-brand-full" src="img/ogiq_logo.png" width="130" height="50" alt="CoreUI Logo">
-        <img class="navbar-brand-minimized" src="img/ogiq_logo_symbol.png" width="30" height="30" alt="CoreUI Logo">
+        <img class="navbar-brand-full" src="/img/ogiq_logo.png" width="130" height="50" alt="CoreUI Logo">
+        <img class="navbar-brand-minimized" src="/img/ogiq_logo_symbol.png" width="30" height="30" alt="CoreUI Logo">
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
       <b-navbar-nav class="ml-auto">

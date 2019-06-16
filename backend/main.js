@@ -10,6 +10,7 @@ var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 const morgan = require('morgan');
+var history = require('connect-history-api-fallback');
 
 var timers = new timers_module();
 console.log("**** Start openGreenIQ Server ****");
@@ -17,6 +18,7 @@ console.log("**** Start openGreenIQ Server ****");
 const app = express();
 console.log("Express Server Running...");
 
+app.use(history());
 app.use(morgan('tiny'));
 app.use(bodyParser.json());
 app.use(cors());

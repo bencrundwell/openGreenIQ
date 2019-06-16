@@ -41,26 +41,26 @@ function waterZone(zone, duration) {
     if (duration < 1 || duration > (60 * 20)) return;
     master.writeSync(1);
 
-    // switch (zone) {
-    //     case 1:
-    //         v1.writeSync(1);
-    //         break
-    //     case 2:
-    //         v2.writeSync(1);
-    //         break
-    //     case 3:
-    //         v3.writeSync(1);
-    //         break
-    //     case 4:
-    //         v4.writeSync(1);
-    //         break
-    //     case 5:
-    //         v5.writeSync(1);
-    //         break
-    //     case 6:
-    //         v6.writeSync(1);
-    //         break
-    // }
+    switch (zone) {
+        case 1:
+            v1.writeSync(1);
+            break
+        case 2:
+            v2.writeSync(1);
+            break
+        case 3:
+            v3.writeSync(1);
+            break
+        case 4:
+            v4.writeSync(1);
+            break
+        case 5:
+            v5.writeSync(1);
+            break
+        case 6:
+            v6.writeSync(1);
+            break
+    }
 
     clearTimeout( timer );
     timer = setTimeout( function (){

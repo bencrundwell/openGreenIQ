@@ -17,7 +17,7 @@
                 <div class="text-uppercase text-muted small">Area</div>
               </div>
             </div>
-            <a v-bind:href="'/zones/'+item.pin" class="stretched-link"></a>
+            <a v-bind:href="'/zone/'+item.pin" class="stretched-link"></a>
           </div>
         <!-- </a> -->
       </div>
@@ -30,7 +30,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'zones',
+  name: 'zone',
   mounted () {
     this.$store.dispatch('getZones')
   },

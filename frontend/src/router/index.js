@@ -6,11 +6,12 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 const Dashboard = () => import('@/views/Dashboard')
 const Schedule = () => import('@/views/Schedule')
 const Zones = () => import('@/views/Zones')
+const Zone = () => import('@/views/Zone')
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'hash', // https://router.vuejs.org/api/#mode
+  mode: 'history', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
@@ -33,7 +34,14 @@ export default new Router({
         {
           path: 'zones',
           name: 'Zones',
-          component: Zones
+          component: Zones,
+          children: [
+            {
+              path: ':id',
+              name: 'Details',
+              component: Zone
+            }
+          ]
         }
       ]
     }
