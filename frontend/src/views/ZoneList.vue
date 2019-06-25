@@ -30,7 +30,7 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'zones',
+  name: 'zoneList',
   mounted () {
     this.$store.dispatch('getZones')
   },
