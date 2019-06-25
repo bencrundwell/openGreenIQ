@@ -34,7 +34,7 @@
         <div class="card">
           <div class="card-header">Manual Override</div>
           <div class="card-body">
-            <form class="form-horizontal" action method="post" _lpchecked="1">
+            <form class="form-horizontal" action="" method="post" _lpchecked="1">
               <div class="form-group row">
                 <div class="col-md-12">
                   <div class="input-group">
@@ -73,7 +73,7 @@ export default {
   },
   computed: {
     zone() {
-      return this.$store.state.zones[this.$route.params.id];
+      return this.$store.state.zones[this.$route.params.id-1];
     }
   }
 };
