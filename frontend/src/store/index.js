@@ -33,6 +33,9 @@ export default new Vuex.Store({
                 .then(history => {
                     commit('SET_HISTORY', history)
                 })
+        },
+        postWater ({ commit } , payload) {
+            axios.post('http://ogiq:4000/api/water/', payload)
         }
      },
      mutations: {

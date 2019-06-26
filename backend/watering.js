@@ -18,7 +18,7 @@ lights.writeSync(0);
 myEmitter.on('watering', function(schedule_row) {
     console.log("watering: Start watering the following schedule");
     console.log(schedule_row);
-    // waterZone(schedule_row.zone, schedule_row.duration);
+    waterZone(schedule_row.zone, schedule_row.duration);
 });
 
 myEmitter.on('water_zone', function(message) {

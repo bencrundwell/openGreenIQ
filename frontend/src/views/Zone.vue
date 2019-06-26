@@ -5,7 +5,7 @@
         <div class="card">
           <div class="card-header">Information</div>
           <div class="card-body">
-            <table class="table table-striped">
+            <table v-if="zone" class="table table-striped">
               <tbody>
                 <tr>
                   <td>GPIO Pin</td>
@@ -34,7 +34,7 @@
         <div class="card">
           <div class="card-header">Manual Override</div>
           <div class="card-body">
-            <form class="form-horizontal" action="" method="post" _lpchecked="1">
+            <form class="form-horizontal" v-on:submit="manual" action method="post" _lpchecked="1">
               <div class="form-group row">
                 <div class="col-md-12">
                   <div class="input-group">
@@ -45,12 +45,15 @@
                       name="time"
                       placeholder="Watering Time"
                       autocomplete="off"
+                      v-model="time"
+                      min="0"
+                      max="60"
                     >
                     <div class="input-group-append">
                       <span class="input-group-text">mins</span>
                     </div>
                     <span class="input-group-append">
-                      <button class="btn btn-primary" type="button">Water Now</button>
+                      <button class="btn btn-primary" type="submit">Water Now</button>
                     </span>
                   </div>
                 </div>
@@ -71,9 +74,28 @@ export default {
   mounted() {
     this.$store.dispatch("getZones");
   },
+
   computed: {
     zone() {
       return this.$store.state.zones[this.$route.params.id-1];
+    }
+  },
+
+  data: function() {
+    return {
+      time: null
+    }
+  },
+
+  methods: {
+    manual: function(event) {
+      event.preventDefault();
+      var json = {"zone": this.$route.params.id ,"duration": this.time*60}
+      console.log(`Water ${this.$store.state.zones[this.$route.params.id-1].name} for ${this.time} mins`);
+      console.log("send " + JSON.stringify(json));
+
+      this.$store.dispatch("postWater", json);
+
     }
   }
 };
