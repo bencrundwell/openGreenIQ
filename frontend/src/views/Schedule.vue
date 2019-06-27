@@ -11,15 +11,21 @@
       <table class="table b-table table-striped table-hover">
       <thead>
         <tr>
-          <th>Zone</th>
+          <th>Zones</th>
           <th>Days</th>
           <th class="text-center">Time</th>
-          <th class="text-center">Duration</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="item in schedule" :key="item.id">
-          <td>{{ item.name }}</td>
+          <td>
+            <span v-if="item.zone_1"><span class="badge badge-info">{{zones[0].name}}</span>&nbsp;</span>
+            <span v-if="item.zone_2"><span class="badge badge-info">{{zones[1].name}}</span>&nbsp;</span>
+            <span v-if="item.zone_3"><span class="badge badge-info">{{zones[2].name}}</span>&nbsp;</span>
+            <span v-if="item.zone_4"><span class="badge badge-info">{{zones[3].name}}</span>&nbsp;</span>
+            <span v-if="item.zone_5"><span class="badge badge-info">{{zones[4].name}}</span>&nbsp;</span>
+            <span v-if="item.zone_6"><span class="badge badge-info">{{zones[5].name}}</span>&nbsp;</span>
+          </td>
           <td>
             <span v-if="item.day_mon">M </span>
             <span v-if="item.day_tue">Tu </span>
@@ -30,7 +36,7 @@
             <span v-if="item.day_sun">Su </span>
           </td>
           <td class="text-center">{{ Math.floor(item.start_time/60) }}:{{ (item.start_time%60).toString().padStart(2, '0') }}</td>
-          <td class="text-center">{{ item.duration/60 }}:{{ (item.duration%60).toString().padStart(2, '0') }}</td>
+          <!-- <td class="text-center">{{ item.duration/60 }}:{{ (item.duration%60).toString().padStart(2, '0') }}</td> -->
         </tr>
       </tbody>
     </table>
@@ -45,6 +51,7 @@ export default {
   name: 'schedule',
   mounted () {
     this.$store.dispatch('getSchedule')
+    this.$store.dispatch('getZones')
   },
   computed: {
     schedule () {
@@ -61,6 +68,10 @@ export default {
         item.days_decode.sun = old_days&1
       })
       return schedule
+    },
+    zones () {
+      var zones = this.$store.state.zones
+      return zones
     }
   }
 }
