@@ -17,12 +17,12 @@
           </b-button-toolbar>
         </b-col>
       </b-row>
-      <main-chart-example chartId="main-chart-01" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
+      <main-chart-example chartId="main-chart" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
     </b-card>
     
-    <b-card v-for="entry in schedule" :key="entry.id">
+    <!-- <b-card v-for="entry in schedule" :key="entry.id">
       {{ entry }}
-    </b-card>
+    </b-card> -->
   </div>
 </template>
  
@@ -37,7 +37,7 @@ export default {
   },
 
   mounted () {
-    this.$store.dispatch('getHistory')
+    //this.$store.dispatch('getHistory')
   },
 
   data: function () {
@@ -46,8 +46,8 @@ export default {
     }
   },
 
-  computed: mapState([
-    'schedule'
-  ])
+  // computed: mapState([
+  //   'schedule'
+  // ])
 }
 </script>

@@ -5,48 +5,85 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { random } from '@/shared/utils'
 var moment = require('moment');
 
+let elements = 7
+const labels = []      
+let options = []
+const brandSuccess = getStyle('--success') || '#4dbd74'
+const brandInfo = getStyle('--info') || '#20a8d8'
+const brandDanger = getStyle('--danger') || '#f86c6b'
+
 export default {
+  name: 'main-chart',
   extends: Line,
   props: ['height'],
-  mounted () {
-    const brandSuccess = getStyle('--success') || '#4dbd74'
-    const brandInfo = getStyle('--info') || '#20a8d8'
-    const brandDanger = getStyle('--danger') || '#f86c6b'
+  methods: {
+    updateChart: function () {
 
-    let elements = 7
-    const temperatureData = []
-    const labels = []
+      
+      let rainfallData = []
+      let temperatureData = []
 
-    let options = []
-    
-    this.$store.dispatch('getHistory')
-      .then( d => {
-        for (let i = 0; i <= elements; i++) {
-            temperatureData[i] = this.$store.state.history[i]
-            //temperatureData.push(0)
-            labels[i] = moment().subtract(i, "days").format("ddd")
+      console.log("function")
+      const history = this.$store.state.history;
+      const startdate = moment().subtract(elements+1, "days")
+
+      console.log(startdate)
+
+      const result = history.filter(item => 
+        moment(item.date).isAfter(startdate)
+      ) 
+
+      console.log(result)
+
+      for (let i = 0; i < result.length; i++) {
+        rainfallData[i] = result[i].rainfall
+        temperatureData[i] = result[i].temp
+        //temperatureData.push(history[i].rainfall)
+        //labels[i] = moment().subtract(i, "days").format("ddd")
+        labels[i] = moment(result[i].date).format("ddd")
+      }
+
+      console.log("data: " + temperatureData)
+
+      this.renderChart({
+        labels,
+        datasets: [
+          {
+            label: 'Rainfall',
+            backgroundColor: hexToRgba(brandInfo, 10),
+            borderColor: brandInfo,
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: rainfallData
           }
-
-        this.renderChart({
-          labels,
-          datasets: [
-            {
-              label: 'Temperature',
-              backgroundColor: hexToRgba(brandInfo, 10),
-              borderColor: brandInfo,
-              pointHoverBackgroundColor: '#fff',
-              borderWidth: 2,
-              data: temperatureData
-            }
-          ]
-        }, options)
-      })
-
-    for (let i = 0; i <= elements; i++) {
-      // temperatureData.push(random(50, 200))
-      temperatureData.push(0)
-      labels.push(moment().subtract(i, "days").format("ddd"))
+        ]
+      }, options)
     }
+  }, 
+
+  mounted () {
+    this.$store.dispatch('getHistory')
+
+    this.$store.subscribe((mutation, state) => {
+      
+      console.log(`subscribe ${mutation.type}`);
+
+      switch(mutation.type) {
+        case 'SET_HISTORY':
+          this.updateChart()
+          break
+      }
+    })
+
+    if (this.$store.state.history) {
+          this.updateChart()
+    }
+
+    // for (let i = 0; i <= elements-1; i++) {
+    //   // temperatureData.push(random(50, 200))
+    //   //temperatureData.push(0)
+    //   labels.push(moment().subtract(i, "days").format("ddd"))
+    // }
 
     options = {
       tooltips: {
@@ -74,9 +111,9 @@ export default {
         yAxes: [{
           ticks: {
             beginAtZero: true,
-            maxTicksLimit: 5,
-            stepSize: Math.ceil(250 / 5),
-            max: 250
+            maxTicksLimit: 5
+            // stepSize: Math.ceil(250 / 5),
+            // max: 250
           },
           gridLines: {
             display: true
@@ -102,7 +139,7 @@ export default {
           borderColor: brandInfo,
           pointHoverBackgroundColor: '#fff',
           borderWidth: 2,
-          data: temperatureData
+          //data: temperatureData
         }
       ]
     }, options)
