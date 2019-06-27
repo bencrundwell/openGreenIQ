@@ -39,6 +39,8 @@ function clearZones() {
 function waterZone(zone, duration) {
     console.log(`watering: water zone ${zone} for ${duration} seconds`);
     if (duration < 1 || duration > (60 * 20)) return;
+    
+    console.log(`enable master valve`);
     master.writeSync(1);
 
     switch (zone) {
@@ -62,6 +64,7 @@ function waterZone(zone, duration) {
             break
     }
 
+    console.log(`schedule valve switch off`);
     clearTimeout( timer );
     timer = setTimeout( function (){
         clearZones();
