@@ -45,21 +45,27 @@ function waterZone(zone, duration) {
 
     switch (zone) {
         case 1:
+            console.log(`enable Zone 1 valve`);
             v1.writeSync(1);
             break
         case 2:
+            console.log(`enable Zone 2 valve`);
             v2.writeSync(1);
             break
         case 3:
+            console.log(`enable Zone 3 valve`);
             v3.writeSync(1);
             break
         case 4:
+            console.log(`enable Zone 4 valve`);
             v4.writeSync(1);
             break
         case 5:
+            console.log(`enable Zone 5 valve`);
             v5.writeSync(1);
             break
         case 6:
+            console.log(`enable Zone 6 valve`);
             v6.writeSync(1);
             break
     }
