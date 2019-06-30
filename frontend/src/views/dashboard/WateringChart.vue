@@ -8,7 +8,7 @@ var moment = require('moment');
 let elements = 7
 const labels = []      
 let options = []
-const brandSuccess = getStyle('--success') || '#4dbd74'
+const brandWarning = getStyle('--warning') || '#4dbd74'
 const brandInfo = getStyle('--info') || '#20a8d8'
 const brandDanger = getStyle('--danger') || '#f86c6b'
 
@@ -22,6 +22,7 @@ export default {
       
       let rainfallData = []
       let temperatureData = []
+      let evapotranspirationData = []
 
       console.log("function")
       const history = this.$store.state.history;
@@ -38,6 +39,7 @@ export default {
       for (let i = 0; i < result.length; i++) {
         rainfallData[i] = result[i].rainfall
         temperatureData[i] = result[i].temp
+        evapotranspirationData[i] = result[i].evapotranspiration
         //temperatureData.push(history[i].rainfall)
         //labels[i] = moment().subtract(i, "days").format("ddd")
         labels[i] = moment(result[i].date).format("ddd")
@@ -49,12 +51,28 @@ export default {
         labels,
         datasets: [
           {
+            label: 'Temperature',
+            backgroundColor: '#fff0',
+            borderColor: brandWarning,
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: temperatureData
+          },
+          {
             label: 'Rainfall',
             backgroundColor: hexToRgba(brandInfo, 10),
             borderColor: brandInfo,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: rainfallData
+          },
+          {
+            label: 'Evapotranspiration',
+            backgroundColor: hexToRgba(brandDanger, 10),
+            borderColor: brandDanger,
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: evapotranspirationData
           }
         ]
       }, options)
@@ -95,12 +113,19 @@ export default {
         callbacks: {
           labelColor: function (tooltipItem, chart) {
             return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].borderColor }
+          },
+          label: function(tooltipItems, data) { 
+            var units = ""
+            if (tooltipItems.datasetIndex == 0) units = " &#8451;"
+            else units = " mm"
+            return data.datasets[tooltipItems.datasetIndex].label +': ' + tooltipItems.yLabel + units;
           }
         }
       },
       maintainAspectRatio: false,
       legend: {
-        display: false
+        display: true,
+        position: 'bottom'
       },
       scales: {
         xAxes: [{

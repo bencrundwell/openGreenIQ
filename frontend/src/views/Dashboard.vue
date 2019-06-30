@@ -4,7 +4,7 @@
     <b-card>
       <b-row>
         <b-col sm="5">
-          <h4 id="traffic" class="card-title mb-0">Traffic</h4>
+          <h4 id="traffic" class="card-title mb-0">Weather Data</h4>
           <div class="small text-muted">November 2017</div>
         </b-col>
         <b-col sm="7" class="d-none d-md-block">
