@@ -36,6 +36,10 @@ export default new Vuex.Store({
         },
         postWater ({ commit } , payload) {
             axios.post('http://ogiq:4000/api/water/', payload)
+        },
+        postScheduleTest ({ commit } , payload) {
+            console.log ("store: action: postScheduleTest, payload: "+ payload)
+            axios.post('http://ogiq:4000/api/scheduletest/', payload)
         }
      },
      mutations: {

@@ -1,5 +1,7 @@
 var myEmitter = require('./my_emitter');
+var mysql_conection = require('./mysql');
 const Gpio = require('onoff').Gpio;
+const util = require('util')
 
 const master = new Gpio(24, 'out');
 const v1 = new Gpio(4, 'out');
@@ -24,6 +26,12 @@ myEmitter.on('watering', function(schedule_row) {
 myEmitter.on('water_zone', function(message) {
     console.log("watering: water_zone received: " + message);
     waterZone(Number(message.zone), Number(message.duration));
+});
+
+//scheduleTest - fired from api due to trigger button being pressed
+myEmitter.on('schedule_test', function(id) {
+    console.log("watering: schedule_test received, id: " + id)
+    executeSchedule(id)
 });
 
 function clearZones() {
@@ -76,4 +84,31 @@ function waterZone(zone, duration) {
     timer = setTimeout( function (){
         clearZones();
     }, 1000 * duration);
+}
+
+function executeSchedule(id) {
+    console.log(`execute schedule ${id}`);
+    temp_mysql = new mysql_conection(function(err, connection) {
+        if (err) throw err;
+        connection.query(`SELECT * FROM schedule where id = ${id}`, function (err, result, fields) {
+            if (err) {
+                console.log("Error when reading database");
+            }
+            else
+            {
+                let schedule = result[0];
+                if (schedule.zone_1) waterZoneAdjusted(1)
+                if (schedule.zone_2) waterZoneAdjusted(2)
+                if (schedule.zone_3) waterZoneAdjusted(3)
+                if (schedule.zone_4) waterZoneAdjusted(4)
+                if (schedule.zone_5) waterZoneAdjusted(5)
+                if (schedule.zone_6) waterZoneAdjusted(6)
+            }
+        });
+        connection.release();
+    });
+}
+
+function waterZoneAdjusted(zone) {
+    console.log(`water Zone ${zone}`);
 }
