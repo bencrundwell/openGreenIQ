@@ -48,6 +48,7 @@
                       v-model="time"
                       min="0"
                       max="60"
+                      step="0.1"
                     >
                     <div class="input-group-append">
                       <span class="input-group-text">mins</span>
@@ -90,11 +91,13 @@ export default {
   methods: {
     manual: function(event) {
       event.preventDefault();
-      var json = {"zone": this.$route.params.id ,"duration": this.time*60}
+      var json = {"zone": Number(this.$route.params.id) ,"duration": this.time*60}
       console.log(`Water ${this.$store.state.zones[this.$route.params.id-1].name} for ${this.time} mins`);
       console.log("send " + JSON.stringify(json));
 
       this.$store.dispatch("postWater", json);
+
+      return(true);
 
     }
   }

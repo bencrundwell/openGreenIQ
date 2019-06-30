@@ -46,12 +46,14 @@ module.exports = {
     postWater: function(app) {
         app.post('/api/water', (req, res) => {
             console.log("API: POST to /api/water");
-            console.log(`API: req.body:`);
-            console.log(util.inspect(req.body, {showHidden: false, depth: null}))
+            console.log(`API: req.body: ` + util.inspect(req.body, {showHidden: false, depth: null}))
             if (req.body.zone && req.body.duration) {
                 const message = req.body;
                 myEmitter.emit('water_zone', message);
             }
+            res.send('OK');
+            res.end();
+            return (false);
         });
     }
 }
