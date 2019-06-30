@@ -22,7 +22,8 @@ myEmitter.on('watering', function(schedule_row) {
 });
 
 myEmitter.on('water_zone', function(message) {
-    waterZone(message.zone, message.duration);
+    console.log("watering: water_zone received: " + message);
+    waterZone(Number(message.zone), Number(message.duration));
 });
 
 function clearZones() {
