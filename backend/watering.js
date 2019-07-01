@@ -90,25 +90,53 @@ function executeSchedule(id) {
     console.log(`execute schedule ${id}`);
     temp_mysql = new mysql_conection(function(err, connection) {
         if (err) throw err;
-        connection.query(`SELECT * FROM schedule where id = ${id}`, function (err, result, fields) {
+        connection.query(`SELECT * FROM schedule where id = ${id}`, async function (err, result, fields) {
             if (err) {
                 console.log("Error when reading database");
             }
             else
             {
                 let schedule = result[0];
-                if (schedule.zone_1) waterZoneAdjusted(1)
-                if (schedule.zone_2) waterZoneAdjusted(2)
-                if (schedule.zone_3) waterZoneAdjusted(3)
-                if (schedule.zone_4) waterZoneAdjusted(4)
-                if (schedule.zone_5) waterZoneAdjusted(5)
-                if (schedule.zone_6) waterZoneAdjusted(6)
+                if (schedule.zone_1) await waterZoneAdjusted(1)
+                if (schedule.zone_2) await waterZoneAdjusted(2)
+                if (schedule.zone_3) await waterZoneAdjusted(3)
+                if (schedule.zone_4) await waterZoneAdjusted(4)
+                if (schedule.zone_5) await waterZoneAdjusted(5)
+                if (schedule.zone_6) await waterZoneAdjusted(6)
             }
         });
         connection.release();
     });
 }
 
-function waterZoneAdjusted(zone) {
-    console.log(`water Zone ${zone}`);
+async function lookupZone(id) {
+    return new Promise(function(resolve, reject) {
+        temp_mysql = new mysql_conection(function(err, connection) {
+            if (err) throw err;
+            connection.query(`SELECT * FROM zones where pin = ${id}`, function (err, result, fields) {
+                connection.release();
+                if (err) {
+                    console.log("Error when reading database");
+                    reject(null);
+                }
+                else
+                {
+                    console.log(`watering: lookupZone: result: ` + util.inspect(result, {showHidden: false, depth: null}))
+                    resolve(result[0]);
+                }
+            })
+        });
+    })
+}
+
+async function waterZoneAdjusted(id) {
+    zone = await lookupZone(id)
+    console.log(`watering: waterZoneAdjusted id: ${id}`)
+    console.log(`watering: calculate duration for ${zone.name}`);
+    console.log(`watering: area = ${zone.area}`);
+    console.log(`watering: flow = ${zone.avg_flow}`);
+    if (zone.avg_flow == null || zone.avg_flow == 0 || zone.area == null || zone.area == 0) {
+        return
+    }
+
 }
