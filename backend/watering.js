@@ -2,6 +2,7 @@ var myEmitter = require('./my_emitter');
 var mysql_conection = require('./mysql');
 const Gpio = require('onoff').Gpio;
 const util = require('util')
+var weather = require('./weather');
 
 const master = new Gpio(24, 'out');
 const v1 = new Gpio(4, 'out');
@@ -109,6 +110,13 @@ function executeSchedule(id) {
     });
 }
 
+// var weather = null;
+
+// module.exports.connectWeather = function (weather_in) {
+//     console.log("connect weather module to watering: " + weather_in)
+//     weather = weather_in
+// }
+
 async function lookupZone(id) {
     return new Promise(function(resolve, reject) {
         temp_mysql = new mysql_conection(function(err, connection) {
@@ -121,13 +129,27 @@ async function lookupZone(id) {
                 }
                 else
                 {
+                    var zone = result[0];
+                    zone.evapotranspiration = weather.getEvapotranspiration()
+                    zone.calculated_volume = (zone.area * (zone.evapotranspiration/1000) ) * 1000; // in litres
+                    zone.calculated_duration = (zone.calculated_volume / zone.avg_flow) * 60; // in seconds
                     console.log(`watering: lookupZone: result: ` + util.inspect(result, {showHidden: false, depth: null}))
-                    resolve(result[0]);
+                    resolve(zone);
+                    
+                    const message = [];
+                    message.type = 1
+                    message.event = `Water Zone ${zone.pin} for ${zone.calculated_duration}s`
+                    message.zone = zone.pin
+                    message.value = zone.calculated_duration
+                    myEmitter.emit('log_event', message);
+
+                    //TODO: only log completed watering in case the user cancels it
                 }
             })
         });
     })
 }
+
 
 async function waterZoneAdjusted(id) {
     zone = await lookupZone(id)

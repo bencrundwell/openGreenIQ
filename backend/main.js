@@ -5,6 +5,7 @@ var timers_module = require('./timers');
 var weather = require('./weather');
 var api = require('./api');
 var mysql_conection = require('./mysql');
+var events_module = require('./events');
 
 var express = require('express');
 var cors = require('cors');
@@ -17,6 +18,8 @@ console.log("**** Start openGreenIQ Server ****");
 
 const app = express();
 console.log("Express Server Running...");
+
+//watering.connectWeather(weather);
 
 app.use(history());
 app.use(morgan('tiny'));
