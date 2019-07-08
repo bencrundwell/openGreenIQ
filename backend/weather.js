@@ -119,9 +119,12 @@ myEmitter.on('dayTimer', function() {
     }, 10000);
 });
 
-// exports.evapotranspiration = evapotranspiration 
 exports.getEvapotranspiration = function() {
     return evapotranspiration;
+  };
+
+exports.getRainfall = function() {
+    return rainfall_24h;
   };
 
 //myEmitter.emit('hourTimer');
