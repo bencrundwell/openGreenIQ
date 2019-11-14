@@ -46,43 +46,53 @@ function clearZones() {
     console.log("watering: Stop watering in all zones");
 }
 
-function waterZone(zone, duration, callback) {
+async function waterZone(zone, duration, callback) {
     console.log(`watering: water zone ${zone} for ${duration} seconds`);
-    if (duration < 1 || duration > (60 * 30)) return;
+    if (duration >= 1 && duration < (60 * 60))
+    {
+        console.log(`enable master valve`);
+        master.writeSync(1);
     
-    console.log(`enable master valve`);
-    master.writeSync(1);
-
-    switch (zone) {
-        case 1:
-            console.log(`enable Zone 1 valve`);
-            v1.writeSync(1);
-            break
-        case 2:
-            console.log(`enable Zone 2 valve`);
-            v2.writeSync(1);
-            break
-        case 3:
-            console.log(`enable Zone 3 valve`);
-            v3.writeSync(1);
-            break
-        case 4:
-            console.log(`enable Zone 4 valve`);
-            v4.writeSync(1);
-            break
-        case 5:
-            console.log(`enable Zone 5 valve`);
-            v5.writeSync(1);
-            break
-        case 6:
-            console.log(`enable Zone 6 valve`);
-            v6.writeSync(1);
-            break
+        switch (zone) {
+            case 1:
+                console.log(`enable Zone 1 valve`);
+                v1.writeSync(1);
+                break
+            case 2:
+                console.log(`enable Zone 2 valve`);
+                v2.writeSync(1);
+                break
+            case 3:
+                console.log(`enable Zone 3 valve`);
+                v3.writeSync(1);
+                break
+            case 4:
+                console.log(`enable Zone 4 valve`);
+                v4.writeSync(1);
+                break
+            case 5:
+                console.log(`enable Zone 5 valve`);
+                v5.writeSync(1);
+                break
+            case 6:
+                console.log(`enable Zone 6 valve`);
+                v6.writeSync(1);
+                break
+        }
     }
 
     console.log(`schedule valve switch off`);
     clearTimeout( timer );
-    timer = setTimeout( function (){
+    timer = setTimeout( async function (){
+        zone_obj = await lookupZone(zone)
+        const volume = parseFloat((duration/60) * zone_obj.avg_flow).toFixed(1)
+        const message = [];
+        message.type = 1
+        message.event = `Water ${zone_obj.name} with ${volume}L`
+        message.zone = zone
+        message.value = volume
+        myEmitter.emit('log_event', message);
+
         clearZones();
         if (callback) callback();
     }, 1000 * duration);
@@ -100,6 +110,13 @@ function executeSchedule(id) {
             }
             else
             {
+                const message = [];
+                message.type = 2
+                message.event = `Execute Schedule ${id}`
+                message.zone = id
+                message.value = null
+                myEmitter.emit('log_event', message);
+
                 console.log("watering: Current ET: " + weather.getEvapotranspiration())
                 let schedule = result[0];
 
@@ -161,12 +178,7 @@ async function waterZoneAdjusted(id) {
     } 
 
     //TODO: only log completed watering in case the user cancels it
-    const message = [];
-    message.type = 1
-    message.event = `Water Zone ${zone.pin} for ${zone.calculated_duration}s`
-    message.zone = zone.pin
-    message.value = zone.calculated_duration
-    myEmitter.emit('log_event', message);
+
 
     waterZone(id, zone.calculated_duration, function() {
         if (schedule_zones.length > 0) {

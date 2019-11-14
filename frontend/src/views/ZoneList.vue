@@ -8,7 +8,7 @@
           </div>
           <div class="brand-card-body">
             <div>
-              <div class="text-value">{{ item.avg_flow }} L/h</div>
+              <div class="text-value">{{ item.avg_flow }} L/m</div>
               <div class="text-uppercase text-muted small">Flow</div>
             </div>
             <div>
@@ -16,7 +16,7 @@
               <div class="text-uppercase text-muted small">Area</div>
             </div>
           </div>
-          <a v-bind:href="'/zones/'+item.pin" class="stretched-link"></a>
+          <a v-bind:href="'#/zones/'+item.pin" class="stretched-link"></a>
         </div>
       </div>
     </div>

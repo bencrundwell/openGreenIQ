@@ -12,48 +12,112 @@
             <th>Zones</th>
             <th>Days</th>
             <th class="text-center">Time</th>
-            <th>Test</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="item in schedule" :key="item.id">
             <td>
-              <span v-if="item.zone_1">
+              <span v-if="item.zone_1 && zones[0]">
                 <span class="badge badge-info">{{zones[0].name}}</span>&nbsp;
               </span>
-              <span v-if="item.zone_2">
+              <span v-if="item.zone_2 && zones[0]">
                 <span class="badge badge-info">{{zones[1].name}}</span>&nbsp;
               </span>
-              <span v-if="item.zone_3">
+              <span v-if="item.zone_3 && zones[0]">
                 <span class="badge badge-info">{{zones[2].name}}</span>&nbsp;
               </span>
-              <span v-if="item.zone_4">
+              <span v-if="item.zone_4 && zones[0]">
                 <span class="badge badge-info">{{zones[3].name}}</span>&nbsp;
               </span>
-              <span v-if="item.zone_5">
+              <span v-if="item.zone_5 && zones[0]">
                 <span class="badge badge-info">{{zones[4].name}}</span>&nbsp;
               </span>
-              <span v-if="item.zone_6">
+              <span v-if="item.zone_6 && zones[0]">
                 <span class="badge badge-info">{{zones[5].name}}</span>&nbsp;
               </span>
             </td>
             <td>
-              <span v-if="item.day_mon">M</span>
-              <span v-if="item.day_tue">Tu</span>
-              <span v-if="item.day_wed">W</span>
-              <span v-if="item.day_thu">Th</span>
-              <span v-if="item.day_fri">F</span>
-              <span v-if="item.day_sat">Sa</span>
-              <span v-if="item.day_sun">Su</span>
+              <span v-if="item.day_mon">M&nbsp;</span>
+              <span v-if="item.day_tue">Tu&nbsp;</span>
+              <span v-if="item.day_wed">W&nbsp;</span>
+              <span v-if="item.day_thu">Th&nbsp;</span>
+              <span v-if="item.day_fri">F&nbsp;</span>
+              <span v-if="item.day_sat">Sa&nbsp;</span>
+              <span v-if="item.day_sun">Su&nbsp;</span>
             </td>
             <td
               class="text-center"
             >{{ Math.floor(item.start_time/60) }}:{{ (item.start_time%60).toString().padStart(2, '0') }}</td>
             <!-- <td class="text-center">{{ item.duration/60 }}:{{ (item.duration%60).toString().padStart(2, '0') }}</td> -->
             <td>
-                <button class="btn btn-primary" type="button" v-on:click="trigger(item.id)">
-                  <i class="fa fa-play-circle-o"></i>&nbsp;Trigger
-                </button>
+              <button
+                class="btn btn-primary"
+                type="button"
+                v-on:click="trigger(item.id)"
+                style="white-space: nowrap; padding: 5px;"
+              >
+                <i class="fa fa-play-circle-o"></i>&nbsp;Trigger
+              </button>&nbsp;
+              <b-button
+                v-b-modal.modal-1
+                class="btn btn-primary"
+                type="button"
+                v-on:click="edit(item.id)"
+                style="white-space: nowrap; padding: 5px;"
+              >
+                <i class="fa fa-pencil-square-o"></i>&nbsp;Edit
+              </b-button>
+
+              <b-modal id="modal-1" :title="'Edit Schedule ' + item.id">
+                <table class="table table-hover table-striped table-align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Size</th>
+                      <th>Example</th>
+                      <th>CSS Class</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Large</td>
+                      <td>
+                        <label class="switch switch-lg switch-3d switch-primary">
+                          <input class="switch-input" type="checkbox" checked />
+                          <span class="switch-slider"></span>
+                        </label>
+                      </td>
+                      <td>
+                        Add following class
+                        <code>.switch-lg</code>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>Normal</td>
+                      <td>
+                        <label class="switch switch-3d switch-primary">
+                          <input class="switch-input" type="checkbox" checked />
+                          <span class="switch-slider"></span>
+                        </label>
+                      </td>
+                      <td>-</td>
+                    </tr>
+                    <tr>
+                      <td>Small</td>
+                      <td>
+                        <label class="switch switch-sm switch-3d switch-primary">
+                          <input class="switch-input" type="checkbox" checked />
+                          <span class="switch-slider"></span>
+                        </label>
+                      </td>
+                      <td>
+                        Add following class
+                        <code>.switch-sm</code>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </b-modal>
             </td>
           </tr>
         </tbody>
@@ -95,9 +159,9 @@ export default {
 
   methods: {
     trigger: function(id) {
-      console.log("emit postScheduleTest, id: " + id)
-      var json = {"id": Number(id)}
-      this.$store.dispatch("postScheduleTest", json)
+      console.log("emit postScheduleTest, id: " + id);
+      var json = { id: Number(id) };
+      this.$store.dispatch("postScheduleTest", json);
     }
   }
 };

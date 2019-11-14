@@ -10,7 +10,8 @@ export default new Vuex.Store({
     state: {
         schedule: [],
         zones: [],
-        history: []
+        history: [],
+        events: []
      },
      actions: {
         getSchedule ({ commit }) {
@@ -34,6 +35,13 @@ export default new Vuex.Store({
                     commit('SET_HISTORY', history)
                 })
         },
+        getEvents ({ commit }) {
+            axios.get('http://ogiq:4000/api/events/')
+                .then(r => r.data)
+                .then(events => {
+                    commit('SET_EVENTS', events)
+                })
+        },
         postWater ({ commit } , payload) {
             axios.post('http://ogiq:4000/api/water/', payload)
         },
@@ -45,12 +53,15 @@ export default new Vuex.Store({
      mutations: {
         SET_SCHEDULE (state, schedule) {
             state.schedule = schedule
-          }, 
+        }, 
         SET_ZONES (state, zones) {
             state.zones = zones
-          }, 
+        }, 
         SET_HISTORY (state, history) {
             state.history = history
+        },
+        SET_EVENTS (state, events) {
+            state.events = events
         }
      }
 })

@@ -33,6 +33,7 @@ api.getTable(app, "history");
 api.getTable(app, "hourly");
 api.getTable(app, "zones");
 api.getTable(app, "schedule");
+api.getTable(app, "events");
 api.postWater(app);
 api.postScheduletest(app);
 

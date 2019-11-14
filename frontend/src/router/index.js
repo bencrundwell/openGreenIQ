@@ -7,11 +7,12 @@ const Dashboard = () => import('@/views/Dashboard')
 const Schedule = () => import('@/views/Schedule')
 const ZoneList = () => import('@/views/ZoneList')
 const Zone = () => import('@/views/Zone')
+const History = () => import('@/views/History')
 
 Vue.use(Router)
 
 export default new Router({
-  mode: 'history', // https://router.vuejs.org/api/#mode
+  mode: 'hash', // https://router.vuejs.org/api/#mode
   linkActiveClass: 'open active',
   scrollBehavior: () => ({ y: 0 }),
   routes: [
@@ -46,6 +47,11 @@ export default new Router({
               name: 'Details'
             }
           ]
+        },
+        {
+          path: 'history',
+          name: 'History',
+          component: History
         }
       ]
     }
