@@ -5,7 +5,7 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { random } from '@/shared/utils'
 var moment = require('moment');
 
-let elements = 7
+let elements = 14
 const labels = []      
 let options = []
 const brandWarning = getStyle('--warning') || '#4dbd74'
@@ -40,8 +40,6 @@ export default {
         rainfallData[i] = result[i].rainfall
         temperatureData[i] = result[i].temp
         evapotranspirationData[i] = result[i].evapotranspiration
-        //temperatureData.push(history[i].rainfall)
-        //labels[i] = moment().subtract(i, "days").format("ddd")
         labels[i] = moment(result[i].date).format("ddd")
       }
 
@@ -151,23 +149,23 @@ export default {
           hitRadius: 10,
           hoverRadius: 4,
           hoverBorderWidth: 3
-        }
+        } 
       }
     }
 
-    this.renderChart({
-      labels,
-      datasets: [
-        {
-          label: 'Temperature',
-          backgroundColor: hexToRgba(brandInfo, 10),
-          borderColor: brandInfo,
-          pointHoverBackgroundColor: '#fff',
-          borderWidth: 2,
-          //data: temperatureData
-        }
-      ]
-    }, options)
+    // this.renderChart({
+    //   labels,
+    //   datasets: [
+    //     {
+    //       label: 'Temperature',
+    //       backgroundColor: hexToRgba(brandInfo, 10),
+    //       borderColor: brandInfo,
+    //       pointHoverBackgroundColor: '#fff',
+    //       borderWidth: 2,
+    //       //data: temperatureData
+    //     }
+    //   ]
+    // }, options)
   }
 }
 </script>

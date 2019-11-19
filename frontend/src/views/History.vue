@@ -54,7 +54,7 @@ export default {
   },
   methods: {
     formatDate(date) {
-      return moment(date).format("ddd hh:mm")
+      return moment(date).format("ddd Do @ hh:mm")
     }
   }
 };

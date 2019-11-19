@@ -23,6 +23,23 @@ module.exports = {
             });
         });
     },
+    getEvents: function(app) {
+        app.get(`/api/events`, (req, res) => {
+            temp_mysql = new mysql_conection(function(err, connection) {
+            if (err) throw err;
+            connection.query(`SELECT * FROM events ORDER BY id DESC LIMIT 50`, function (err, result, fields) {
+                if (err) {
+                    res.status(400).send("Error when reading database");
+                }
+                else
+                {
+                    res.json(result);
+                }
+            });
+            connection.release();
+            });
+        });
+    },
     getSchedule: function(app) {
         app.get('/api/schedule', (req, res) => {
             temp_mysql = new mysql_conection(function(err, connection) {
