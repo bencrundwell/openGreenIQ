@@ -4,7 +4,8 @@ import Router from 'vue-router'
 const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 const Dashboard = () => import('@/views/Dashboard')
-const Schedule = () => import('@/views/Schedule')
+const ScheduleList = () => import('@/views/ScheduleList')
+const ScheduleEdit = () => import('@/views/ScheduleEdit')
 const ZoneList = () => import('@/views/ZoneList')
 const Zone = () => import('@/views/Zone')
 const History = () => import('@/views/History')
@@ -28,9 +29,20 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: 'schedule',
-          name: 'Schedule',
-          component: Schedule
+          path: 'schedules',
+          name: 'Schedules',
+          component: ScheduleList
+        },
+        {
+          path: 'schedules',
+          name: 'Schedules',
+          component: ScheduleEdit,
+          children: [
+            {
+              path: ':id',
+              name: 'Details'
+            }
+          ]
         },
         {
           path: 'zones',

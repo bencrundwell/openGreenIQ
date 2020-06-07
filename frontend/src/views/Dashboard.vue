@@ -20,7 +20,7 @@
       <main-chart-example chartId="main-chart" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
     </b-card>
 
-    <b-card header-tag="header" footer-tag="footer">
+    <b-card id="watering-history" header-tag="header" footer-tag="footer">
       <div slot="header">
         <h4 class="card-title mb-0">Watering History</h4>
       </div>
@@ -41,9 +41,7 @@
         <tbody>
           <tr v-for="zone in events.zone" :key="zone.id" v-bind:id="zone.id">
             <td>{{zones[zone.id].name}}</td>
-            <td v-for="day in zone.day" :key="day">
-              {{day}} L
-            </td>
+            <td v-for="day in zone.day" :key="day">{{day}}&nbsp;L</td>
           </tr>
         </tbody>
       </table>

@@ -7,7 +7,7 @@ export default {
     },
     {
       name: 'Schedule',
-      url: '/schedule',
+      url: '/schedules',
       icon: 'icon-calendar'
     },
     {
