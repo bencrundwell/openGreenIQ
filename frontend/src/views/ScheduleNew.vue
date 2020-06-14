@@ -3,13 +3,12 @@
     <b-card header-tag="header" footer-tag="footer">
       <b-form @submit="onSubmit">
         <div slot="header">
-          <h4 class="card-title mb-0">Edit Watering Schedule</h4>
+          <h4 class="card-title mb-0">Add Watering Schedule</h4>
         </div>
         <b-form-group
           id="input-group-1"
           label="Active Zones:"
           description="Zones to include in this schedule"
-          v-if="schedule"
         >
           <b-form-checkbox v-if="zones[0]" v-model="schedule.zone_1" switch>
             {{zones[0].name}}
@@ -35,7 +34,6 @@
           id="input-group-2"
           label="Active Days:"
           description="Which days to water on"
-          v-if="schedule"
         >
           <b-form-checkbox v-model="schedule.day_mon" switch>Monday</b-form-checkbox>
           <b-form-checkbox v-model="schedule.day_tue" switch>Tuesday</b-form-checkbox>
@@ -49,7 +47,6 @@
           id="input-group-3"
           label="Start Time:"
           description="When to start watering"
-          v-if="schedule"
         >
           <b-form-timepicker v-model="time" value="item" locale="en"></b-form-timepicker>
         </b-form-group>
@@ -58,15 +55,8 @@
           <i class="fa fa-window-close-o"></i>&nbsp;Cancel
         </b-button>
         &nbsp;
-        <b-button
-          variant="danger"
-          v-on:click="deleteSchedule(schedule.id)"
-        >
-          <i class="fa fa-trash-o"></i>&nbsp;Delete
-        </b-button>
-        &nbsp;
         <b-button variant="primary" type="submit">
-          <i class="fa fa-pencil-square-o"></i>&nbsp;Update
+          <i class="fa fa-pencil-square-o"></i>&nbsp;Create
         </b-button>
       </b-form>
     </b-card>
@@ -78,19 +68,20 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "scheduleEdit",
+  name: "scheduleNew",
   mounted() {
     console.log("mounted()");
-    this.$store.dispatch("getSchedule");
     this.$store.dispatch("getZones");
   },
   computed: {
     schedule() {
-      console.log("id = " + this.$route.params.id);
-      return this.$store.state.schedule.find(s => s.id == this.$route.params.id);
+      var schedule = {};
+      schedule.start_time = 0;
+      return schedule;
     },
     zones() {
-      return this.$store.state.zones;
+      var zones = this.$store.state.zones;
+      return zones;
     },
     time: {
       get () {
@@ -104,7 +95,6 @@ export default {
         var minutes = parseInt(value.split(':')[1]);
         var time = ((hours * 60) + minutes);
         this.schedule.start_time = time;
-        // console.log("set time: " + hours + " " + minutes + " " + time);
       }
     }
   },
@@ -112,19 +102,15 @@ export default {
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      this.$store.dispatch('updateSchedule', this.schedule);
+      console.log("Add Schedule:");
+      console.log(this.schedule);
+      this.$store.dispatch('addSchedule', this.schedule);
       window.location = "#/schedules/";
     },
     onCancel() {
       console.log("Cancel!");
       window.location = "#/schedules/";
-    },
-    deleteSchedule: function(id) {
-      console.log("emit deleteSchedule, id: " + id);
-      var json = { id: Number(id) };
-      this.$store.dispatch("deleteSchedule", json);
-      window.location = "#/schedules/";
-    },
+    }
 
   }
 };

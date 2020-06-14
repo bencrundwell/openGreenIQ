@@ -6,6 +6,7 @@ const DefaultContainer = () => import('@/containers/DefaultContainer')
 const Dashboard = () => import('@/views/Dashboard')
 const ScheduleList = () => import('@/views/ScheduleList')
 const ScheduleEdit = () => import('@/views/ScheduleEdit')
+const ScheduleNew = () => import('@/views/ScheduleNew')
 const ZoneList = () => import('@/views/ZoneList')
 const Zone = () => import('@/views/Zone')
 const History = () => import('@/views/History')
@@ -31,32 +32,51 @@ export default new Router({
         {
           path: 'schedules',
           name: 'Schedules',
-          component: ScheduleList
-        },
-        {
-          path: 'schedules',
-          name: 'Schedules',
-          component: ScheduleEdit,
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
           children: [
             {
+              path: '',
+              name: 'All Schedules',
+              component: ScheduleList,
+            },
+            {
+              path: 'add',
+              name: 'Add Schedule',
+              component: ScheduleNew
+            },{
               path: ':id',
-              name: 'Details'
+              name: 'Details',
+              component: ScheduleEdit,
             }
           ]
         },
         {
           path: 'zones',
-          name: 'Zones',
-          component: ZoneList
-        },
-        {
-          path: 'zones',
-          name: 'Zones',
-          component: Zone,
+          meta: {
+            label: 'Zones'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
           children: [
             {
+              path: '',
+              name: 'All Zones',
+              component: ZoneList,
+            },
+            {
               path: ':id',
-              name: 'Details'
+              meta: {
+                label: 'Zone Details'
+              },
+              name: 'Zone',
+              component: Zone,
             }
           ]
         },

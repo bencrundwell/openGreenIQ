@@ -33,8 +33,10 @@
         overflow-x: scroll;
     }
     
-    #watering-schedule .card-body button{
+    #watering-schedule .card-body button,
+    #watering-schedule .card-body a{
         margin-bottom: 0.5rem !important;
+        width: 90px;
     }
 }
 

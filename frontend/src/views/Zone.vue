@@ -1,7 +1,7 @@
 <template>
   <div class="animated fadeIn">
     <div class="row">
-      <div class="col-sm-6 col-lg-4">
+      <div class="col-sm-12 col-md-6">
         <div class="card">
           <div class="card-header">Information</div>
           <div class="card-body">
@@ -30,7 +30,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm-6 col-lg-4">
+      <div class="col-sm-12 col-md-6">
         <div class="card">
           <div class="card-header">Manual Override</div>
           <div class="card-body">

@@ -20,7 +20,7 @@
       <main-chart-example chartId="main-chart" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
     </b-card>
 
-    <b-card id="watering-history" header-tag="header" footer-tag="footer">
+    <b-card v-if="events" id="watering-history" header-tag="header" footer-tag="footer">
       <div slot="header">
         <h4 class="card-title mb-0">Watering History</h4>
       </div>
@@ -38,14 +38,16 @@
             <th>{{events.day[0].name}}</th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="zone in events.zone" :key="zone.id" v-bind:id="zone.id">
-            <td>{{zones[zone.id].name}}</td>
-            <td v-for="day in zone.day" :key="day">{{day}}&nbsp;L</td>
+         <tbody>
+          <tr v-for="(zone, index) in events.zone" :key="index">
+            <template v-if="zones[zone.id]">
+              <td>{{zones[zone.id].name}}</td>
+              <td v-for="(day, index2)  in zone.day" :key="index2">{{day}}&nbsp;L</td>
+            </template>
           </tr>
         </tbody>
       </table>
-    </b-card>
+    </b-card> 
   </div>
 </template>
  
@@ -93,10 +95,10 @@ export default {
             let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day+1, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day, 'days').startOf('day')))
             
             data.zone[zone].day[day] = daysWateringEvents.filter(e => e.zone == zone+1).reduce((acc,val) => acc + val.value, 0)
-            console.log("zone: " + zone + " day: " + day + " value: " + data.zone[zone].day[day])
+            //console.log("zone: " + zone + " day: " + day + " value: " + data.zone[zone].day[day])
           }
         }
-        console.log(data.zone)
+        //console.log(data.zone)
       return data;
     }
   },

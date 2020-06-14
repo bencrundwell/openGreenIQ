@@ -24,17 +24,17 @@ export default {
       let temperatureData = []
       let evapotranspirationData = []
 
-      console.log("function")
+      //console.log("function")
       const history = this.$store.state.history;
       const startdate = moment().subtract(elements+1, "days")
 
-      console.log(startdate)
+      //console.log(startdate)
 
       const result = history.filter(item => 
         moment(item.date).isAfter(startdate)
       ) 
 
-      console.log(result)
+      //console.log(result)
 
       for (let i = 0; i < result.length; i++) {
         rainfallData[i] = result[i].rainfall
@@ -43,7 +43,7 @@ export default {
         labels[i] = moment(result[i].date).format("ddd")
       }
 
-      console.log("data: " + temperatureData)
+      //console.log("data: " + temperatureData)
 
       this.renderChart({
         labels,

@@ -49,42 +49,40 @@ export default new Vuex.Store({
             console.log ("store: action: postScheduleTest, payload: "+ payload)
             axios.post('http://ogiq:4000/api/scheduletest/', payload)
         },
-        updateSchedule({ commit}, payload) {
+        updateSchedule({ commit }, payload) {
+            console.log ("store: action: addSchedule, payload: " + payload);
             axios.put('http://ogiq:4000/api/schedule/', payload)
+                .then(() => {
+                    this.dispatch("getSchedule");
+                })
+        },
+        addSchedule ({ commit }, payload) {
+            console.log ("store: action: addSchedule, payload: " + payload);
+            axios.post('http://ogiq:4000/api/schedule/', payload)
+            .then(() => {
+                this.dispatch("getSchedule");
+            })
+        },
+        deleteSchedule ({ commit }, payload) {
+            console.log ("store: action: deleteSchedule, id: " + payload.id);
+            axios.delete('http://ogiq:4000/api/schedule/'+payload.id)
+            .then(() => {
+                this.dispatch("getSchedule");
+            })
         }
     },
     mutations: {
-        SET_SCHEDULE (state, schedule) {
-            state.schedule = schedule
+        SET_SCHEDULE (state, payload) {
+            state.schedule = payload
         }, 
-        SET_ZONES (state, zones) {
-            state.zones = zones
+        SET_ZONES (state, payload) {
+            state.zones = payload
         }, 
-        SET_HISTORY (state, history) {
-            state.history = history
+        SET_HISTORY (state, payload) {
+            state.history = payload
         },
-        SET_EVENTS (state, events) {
-            state.events = events
+        SET_EVENTS (state, payload) {
+            state.events = payload
         }
-    },
-    getters: {
-        // convertTime: state => {
-        //     console.log ("convertTime:");
-        //     return state.schedule.map(s => {
-        //         var hours = Math.floor(s.start_time / 60);  
-        //         var minutes = s.start_time % 60;
-        //         if (minutes < 10) minutes = '0' + minutes;
-        //         s.start_time_txt = hours + ":" + minutes + ":00";
-        //         return s;
-        //     })
-        // }
-        // convertTxtToTime: state => {
-        //     return state.schedule.map(s => {
-        //         var hours = s.start_time_txt.split(':')[0];
-        //         var minutes = s.start_time_txt.split(':')[1];
-        //         s.start_time = (hours * 60) + minutes;
-        //         return s;
-        //     });
-        // }
     }
 })
