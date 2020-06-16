@@ -9,6 +9,7 @@ const ScheduleEdit = () => import('@/views/ScheduleEdit')
 const ScheduleNew = () => import('@/views/ScheduleNew')
 const ZoneList = () => import('@/views/ZoneList')
 const Zone = () => import('@/views/Zone')
+const ZoneEdit = () => import('@/views/ZoneEdit')
 const History = () => import('@/views/History')
 
 Vue.use(Router)
@@ -71,12 +72,20 @@ export default new Router({
               component: ZoneList,
             },
             {
-              path: ':id',
+              path: ':pin',
               meta: {
                 label: 'Zone Details'
               },
               name: 'Zone',
               component: Zone,
+            },
+            {
+              path: ':pin/edit',
+              meta: {
+                label: 'Edit Zone'
+              },
+              name: 'Zone',
+              component: ZoneEdit,
             }
           ]
         },

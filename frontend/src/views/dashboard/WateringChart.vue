@@ -5,7 +5,7 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { random } from '@/shared/utils'
 var moment = require('moment');
 
-let elements = 14
+let elements = 7
 const labels = []      
 let options = []
 const brandWarning = getStyle('--warning') || '#4dbd74'
@@ -26,7 +26,7 @@ export default {
 
       //console.log("function")
       const history = this.$store.state.history;
-      const startdate = moment().subtract(elements+1, "days")
+      const startdate = moment().subtract(elements, "days")
 
       //console.log(startdate)
 
@@ -35,15 +35,36 @@ export default {
       ) 
 
       //console.log(result)
-
-      for (let i = 0; i < result.length; i++) {
+      let i=0;
+      for (i = 0; i < result.length; i++) {
         rainfallData[i] = result[i].rainfall
         temperatureData[i] = result[i].temp
         evapotranspirationData[i] = result[i].evapotranspiration
         labels[i] = moment(result[i].date).format("ddd")
       }
 
+      // Add today to the graph from the hourly data
+      if (this.$store.state.hourly) {
+        let rainfallToday = 0
+        let temperatureToday = 0
+        let evapotranspirationToday = 0
+        this.$store.state.hourly.forEach((h) => {
+          console.log(h)
+          rainfallToday += h.rain
+          temperatureToday += h.temp
+          evapotranspirationToday += h.evapotranspiration
+        });
+        rainfallToday /= 24;
+        temperatureToday /= 24;
+        evapotranspirationToday /= 24;
+
+        rainfallData[i] = rainfallToday
+        temperatureData[i] = temperatureToday
+        evapotranspirationData[i] = evapotranspirationToday
+        labels[i] = moment().format("ddd")
+      }
       //console.log("data: " + temperatureData)
+      
 
       this.renderChart({
         labels,
@@ -79,13 +100,16 @@ export default {
 
   mounted () {
     this.$store.dispatch('getHistory')
-
+    this.$store.dispatch('getHourly')
     this.$store.subscribe((mutation, state) => {
       
       console.log(`subscribe ${mutation.type}`);
 
       switch(mutation.type) {
         case 'SET_HISTORY':
+          this.updateChart()
+          break
+        case 'SET_HOURLY':
           this.updateChart()
           break
       }

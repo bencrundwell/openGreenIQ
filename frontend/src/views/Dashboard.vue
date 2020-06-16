@@ -81,7 +81,7 @@ export default {
       for(let day = 0; day < 7; day++)
       {
         data.day[day] = []
-        data.day[day].name = moment().subtract(day+1, 'days').format("ddd")
+        data.day[day].name = moment().subtract(day, 'days').format("ddd")
         data.day[day].zone = []
       }
 
@@ -92,10 +92,10 @@ export default {
           data.zone[zone].id = zone
           for(let day = 0; day < 7; day++)
           {
-            let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day+1, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day, 'days').startOf('day')))
+            let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day-1, 'days').startOf('day')))
             
             data.zone[zone].day[day] = daysWateringEvents.filter(e => e.zone == zone+1).reduce((acc,val) => acc + val.value, 0)
-            //console.log("zone: " + zone + " day: " + day + " value: " + data.zone[zone].day[day])
+            // console.log("zone: " + zone + " day: " + day + " value: " + data.zone[zone].day[day])
           }
         }
         //console.log(data.zone)
@@ -106,7 +106,8 @@ export default {
   mounted () {
     //this.$store.dispatch('getHistory')
     this.$store.dispatch("getEvents");
-    this.$store.dispatch('getZones')
+    this.$store.dispatch("getZones");
+    this.$store.dispatch("getHourly");
   },
 
   data: function () {

@@ -28,6 +28,20 @@ export default new Vuex.Store({
                     commit('SET_ZONES', zones)
                 })
         }, 
+        updateZone ({ commit }, payload) {
+            console.log ("store: action: updateZone, payload: " + payload);
+            axios.put('http://ogiq:4000/api/zone/', payload)
+                .then(() => {
+                    this.dispatch("getZones");
+                })
+        },
+        deleteZone ({ commit }, payload) {
+            console.log ("store: action: deleteZone, pin: " + payload.pin);
+            axios.delete('http://ogiq:4000/api/zone/'+payload.pin)
+                .then(() => {
+                    this.dispatch("getZones");
+                })
+        }, 
         getHistory ({ commit }) {
             axios.get('http://ogiq:4000/api/history/')
                 .then(r => r.data)
@@ -42,10 +56,17 @@ export default new Vuex.Store({
                     commit('SET_EVENTS', events)
                 })
         },
+        getHourly ({ commit }) {
+            axios.get('http://ogiq:4000/api/hourly/')
+                .then(r => r.data)
+                .then(hourly => {
+                    commit('SET_HOURLY', hourly)
+                })
+        },
         postWater ({ commit } , payload) {
             axios.post('http://ogiq:4000/api/water/', payload)
         },
-        postScheduleTest ({ commit } , payload) {
+        postScheduleTest ({ commit }, payload) {
             console.log ("store: action: postScheduleTest, payload: "+ payload)
             axios.post('http://ogiq:4000/api/scheduletest/', payload)
         },
@@ -59,9 +80,9 @@ export default new Vuex.Store({
         addSchedule ({ commit }, payload) {
             console.log ("store: action: addSchedule, payload: " + payload);
             axios.post('http://ogiq:4000/api/schedule/', payload)
-            .then(() => {
-                this.dispatch("getSchedule");
-            })
+                .then(() => {
+                    this.dispatch("getSchedule");
+                })
         },
         deleteSchedule ({ commit }, payload) {
             console.log ("store: action: deleteSchedule, id: " + payload.id);
@@ -83,6 +104,9 @@ export default new Vuex.Store({
         },
         SET_EVENTS (state, payload) {
             state.events = payload
+        },
+        SET_HOURLY (state, payload) {
+            state.hourly = payload
         }
     }
 })

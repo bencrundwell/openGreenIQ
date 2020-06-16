@@ -4,11 +4,11 @@
       <div class="col-sm-12 col-md-6">
         <div class="card">
           <div class="card-header">Information</div>
-          <div class="card-body">
-            <table v-if="zone" class="table table-striped">
+          <div class="card-body" v-if="zone">
+            <table class="table table-striped">
               <tbody>
                 <tr>
-                  <td>GPIO Pin</td>
+                  <td>Zone Output</td>
                   <td>{{zone.pin}}</td>
                 </tr>
                 <tr>
@@ -25,6 +25,14 @@
                 </tr>
               </tbody>
             </table>
+            <div class="float-right mb-0">
+              <b-button
+                v-bind:href="'#/zones/'+zone.pin+'/edit'"
+                variant="primary"
+              >
+                <i class="fa fa-pencil-square-o"></i>&nbsp;Edit
+              </b-button>
+            </div>
           </div>
         </div>
       </div>
@@ -78,7 +86,7 @@ export default {
 
   computed: {
     zone() {
-      return this.$store.state.zones[this.$route.params.id-1];
+      return this.$store.state.zones.find(z => z.pin == this.$route.params.pin);
     }
   },
 
@@ -91,8 +99,8 @@ export default {
   methods: {
     manual: function(event) {
       event.preventDefault();
-      var json = {"zone": Number(this.$route.params.id) ,"duration": this.time*60}
-      console.log(`Water ${this.$store.state.zones[this.$route.params.id-1].name} for ${this.time} mins`);
+      var json = {"zone": Number(this.$route.params.pin) ,"duration": this.time*60}
+      console.log(`Water ${this.$store.state.zones.find(z => z.pin == this.$route.params.pin)} for ${this.time} mins`);
       console.log("send " + JSON.stringify(json));
 
       this.$store.dispatch("postWater", json);

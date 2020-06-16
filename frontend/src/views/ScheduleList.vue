@@ -28,19 +28,19 @@
               <div v-if="item.zone_1 && zones[0]">
                 <span class="badge badge-info">{{zones[0].name}}</span>
               </div>
-              <div v-if="item.zone_2 && zones[0]">
+              <div v-if="item.zone_2 && zones[1]">
                 <span class="badge badge-info">{{zones[1].name}}</span>
               </div>
-              <div v-if="item.zone_3 && zones[0]">
+              <div v-if="item.zone_3 && zones[2]">
                 <span class="badge badge-info">{{zones[2].name}}</span>
               </div>
-              <div v-if="item.zone_4 && zones[0]">
+              <div v-if="item.zone_4 && zones[3]">
                 <span class="badge badge-info">{{zones[3].name}}</span>
               </div>
-              <div v-if="item.zone_5 && zones[0]">
+              <div v-if="item.zone_5 && zones[4]">
                 <span class="badge badge-info">{{zones[4].name}}</span>
               </div>
-              <div v-if="item.zone_6 && zones[0]">
+              <div v-if="item.zone_6 && zones[5]">
                 <span class="badge badge-info">{{zones[5].name}}</span>
               </div>
               
