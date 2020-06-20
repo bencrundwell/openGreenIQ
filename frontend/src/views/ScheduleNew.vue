@@ -10,24 +10,26 @@
           label="Active Zones:"
           description="Zones to include in this schedule"
         >
-          <b-form-checkbox v-if="zones[0]" v-model="schedule.zone_1" switch>
-            {{zones[0].name}}
-          </b-form-checkbox>
-          <b-form-checkbox v-if="zones[1]" v-model="schedule.zone_2" switch>
-            {{zones[1].name}}
-          </b-form-checkbox>
-          <b-form-checkbox v-if="zones[2]" v-model="schedule.zone_3" switch>
-            {{zones[2].name}}
-          </b-form-checkbox>
-          <b-form-checkbox v-if="zones[3]" v-model="schedule.zone_4" switch>
-            {{zones[3].name}}
-          </b-form-checkbox>
-          <b-form-checkbox v-if="zones[4]" v-model="schedule.zone_5" switch>
-            {{zones[4].name}}
-          </b-form-checkbox>
-          <b-form-checkbox v-if="zones[5]" v-model="schedule.zone_6" switch>
-            {{zones[5].name}}
-          </b-form-checkbox>
+          <template v-for="zone in zones">
+            <b-form-checkbox v-if="zone.pin == 1" :key="zone.pin" v-model="schedule.zone_1" switch>
+              {{zone.name}}
+            </b-form-checkbox>
+            <b-form-checkbox v-if="zone.pin == 2" :key="zone.pin" v-model="schedule.zone_2" switch>
+              {{zone.name}}
+            </b-form-checkbox>
+            <b-form-checkbox v-if="zone.pin == 3" :key="zone.pin" v-model="schedule.zone_3" switch>
+              {{zone.name}}
+            </b-form-checkbox>
+            <b-form-checkbox v-if="zone.pin == 4" :key="zone.pin" v-model="schedule.zone_4" switch>
+              {{zone.name}}
+            </b-form-checkbox>
+            <b-form-checkbox v-if="zone.pin == 5" :key="zone.pin" v-model="schedule.zone_5" switch>
+              {{zone.name}}
+            </b-form-checkbox>
+            <b-form-checkbox v-if="zone.pin == 6" :key="zone.pin" v-model="schedule.zone_6" switch>
+              {{zone.name}}
+            </b-form-checkbox>
+          </template>
         </b-form-group>
 
         <b-form-group

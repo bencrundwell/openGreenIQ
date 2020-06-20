@@ -49,7 +49,6 @@ export default {
         let temperatureToday = 0
         let evapotranspirationToday = 0
         this.$store.state.hourly.forEach((h) => {
-          console.log(h)
           rainfallToday += h.rain
           temperatureToday += h.temp
           evapotranspirationToday += h.evapotranspiration
@@ -65,7 +64,6 @@ export default {
       }
       //console.log("data: " + temperatureData)
       
-
       this.renderChart({
         labels,
         datasets: [

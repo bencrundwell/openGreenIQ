@@ -28,12 +28,17 @@ app.use(cors());
 const port = 4000;
 
 api.setup(app);
-// api.getSchedule(app);
 api.getTable(app, "history");
 api.getTable(app, "hourly");
 api.getTable(app, "zones");
-api.getTable(app, "schedule");
-api.getEvents(app);
+api.getSchedule(app);
+api.updateSchedule(app);
+api.addSchedule(app);
+api.deleteSchedule(app);
+api.updateZone(app); 
+api.addZone(app);
+api.deleteZone(app);
+api.getEvents(app); 
 api.postWater(app);
 api.postScheduletest(app);
 

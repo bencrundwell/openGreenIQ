@@ -43,11 +43,11 @@ function clearZones() {
     v4.writeSync(0);
     v5.writeSync(0);
     v6.writeSync(0);
-    console.log("watering: Stop watering in all zones");
+    console.log("watering.clearZones: Stop watering in all zones");
 }
 
 async function waterZone(zone, duration, callback) {
-    console.log(`watering: water zone ${zone} for ${duration} seconds`);
+    console.log(`watering.waterZone: water zone ${zone} for ${duration} seconds`);
     if (duration >= 1 && duration < (60 * 60))
     {
         console.log(`enable master valve`);
@@ -117,7 +117,7 @@ function executeSchedule(id) {
                 message.value = null
                 myEmitter.emit('log_event', message);
 
-                console.log("watering: Current ET: " + weather.getEvapotranspiration())
+                console.log("watering: executeSchedule: Current ET: " + weather.getEvapotranspiration())
                 let schedule = result[0];
 
                 if (schedule.zone_6) schedule_zones.push(6)
@@ -126,6 +126,7 @@ function executeSchedule(id) {
                 if (schedule.zone_3) schedule_zones.push(3)
                 if (schedule.zone_2) schedule_zones.push(2)
                 if (schedule.zone_1) schedule_zones.push(1)
+                console.log("watering: executeSchedule: schedule_zones:", schedule_zones);
 
                 if (schedule_zones.length > 0) waterZoneAdjusted(schedule_zones.pop())
             }
@@ -143,6 +144,7 @@ function executeSchedule(id) {
 
 async function lookupZone(id) {
     return new Promise(function(resolve, reject) {
+        console.log(`watering.lookupZone: id = ${id}`);
         temp_mysql = new mysql_conection(function(err, connection) {
             if (err) throw err;
             connection.query(`SELECT * FROM zones where pin = ${id}`, function (err, result, fields) {
@@ -153,14 +155,24 @@ async function lookupZone(id) {
                 }
                 else
                 {
-                    var zone = result[0];
-                    zone.water_required = weather.getEvapotranspiration() - weather.getRainfall()
-                    if (zone.water_required < 0) zone.water_required = 0
+                    console.log(`watering.lookupZone: result: ` + util.inspect(result, {showHidden: false, depth: null}))
+                    if (result.length > 0) {
+                        var zone = result[0];
+                        console.log(`watering.lookupZone: zone = ${zone.name}`);
+                        zone.water_required = weather.getEvapotranspiration() - weather.getRainfall()
+                        console.log(`watering.lookupZone: weather.getRainfall() = ${weather.getRainfall()}`);
+                        console.log(`watering.lookupZone: zone.water_required = ${zone.water_required}`);
+                        if (zone.water_required < 0) zone.water_required = 0
 
-                    zone.calculated_volume = (zone.area * (zone.water_required/1000) ) * 1000; // in litres
-                    zone.calculated_duration = (zone.calculated_volume / zone.avg_flow) * 60; // in seconds
-                    //console.log(`watering: lookupZone: result: ` + util.inspect(result, {showHidden: false, depth: null}))
-                    resolve(zone);
+                        zone.calculated_volume = (zone.area * (zone.water_required/1000) ) * 1000; // in litres
+                        console.log(`watering.lookupZone: zone.calculated_volume = ${zone.calculated_volume}`);
+                        zone.calculated_duration = (zone.calculated_volume / zone.avg_flow) * 60; // in seconds
+                        console.log(`watering.lookupZone: zone.calculated_duration = ${zone.calculated_duration}`);
+                        resolve(zone);
+                    }
+                    else {
+                        resolve(null);
+                    }
                 }
             })
         });
@@ -169,20 +181,19 @@ async function lookupZone(id) {
 
 
 async function waterZoneAdjusted(id) {
+    console.log(`watering.waterZoneAdjusted: id: ${id}`)
     zone = await lookupZone(id)
-    console.log(`watering: waterZoneAdjusted: id: ${id}`)
-    console.log(`watering: calculate duration for ${zone.name} = ${zone.calculated_duration}`);
-
-    if (zone.avg_flow == null || zone.avg_flow == 0 || zone.area == null || zone.area == 0) {
-        return   
-    } 
-
-    //TODO: only log completed watering in case the user cancels it
-
-
-    waterZone(id, zone.calculated_duration, function() {
+    if (zone != null && zone.avg_flow != null && zone.avg_flow != 0 && zone.area != null && zone.area != 0) {
+        console.log(`watering.waterZoneAdjusted: calculated duration for ${zone.name} = ${zone.calculated_duration}`);
+        waterZone(id, zone.calculated_duration, function() {
+            if (schedule_zones.length > 0) {
+                waterZoneAdjusted(schedule_zones.pop())    
+            }
+        })
+    } else {
+        console.log(`watering.waterZoneAdjusted: WARNING: invalid Zone in schedule`);
         if (schedule_zones.length > 0) {
             waterZoneAdjusted(schedule_zones.pop())    
         }
-    })
+    }
 }

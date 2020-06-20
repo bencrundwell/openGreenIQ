@@ -25,24 +25,26 @@
         <tbody>
           <tr v-for="item in schedule" :key="item.id">
             <td>
-              <div v-if="item.zone_1 && zones[0]">
-                <span class="badge badge-info">{{zones[0].name}}</span>
-              </div>
-              <div v-if="item.zone_2 && zones[1]">
-                <span class="badge badge-info">{{zones[1].name}}</span>
-              </div>
-              <div v-if="item.zone_3 && zones[2]">
-                <span class="badge badge-info">{{zones[2].name}}</span>
-              </div>
-              <div v-if="item.zone_4 && zones[3]">
-                <span class="badge badge-info">{{zones[3].name}}</span>
-              </div>
-              <div v-if="item.zone_5 && zones[4]">
-                <span class="badge badge-info">{{zones[4].name}}</span>
-              </div>
-              <div v-if="item.zone_6 && zones[5]">
-                <span class="badge badge-info">{{zones[5].name}}</span>
-              </div>
+              <template v-for="zone in zones">
+                <div v-if="item.zone_1 && zone.pin == 1" :key="zone.pin">
+                  <span class="badge badge-info">{{zone.name}}</span>
+                </div>
+                <div v-if="item.zone_2 && zone.pin == 2" :key="zone.pin">
+                  <span class="badge badge-info">{{zone.name}}</span>
+                </div>
+                <div v-if="item.zone_3 && zone.pin == 3" :key="zone.pin">
+                  <span class="badge badge-info">{{zone.name}}</span>
+                </div>
+                <div v-if="item.zone_4 && zone.pin == 4" :key="zone.pin">
+                  <span class="badge badge-info">{{zone.name}}</span>
+                </div>
+                <div v-if="item.zone_5 && zone.pin == 5" :key="zone.pin">
+                  <span class="badge badge-info">{{zone.name}}</span>
+                </div>
+                <div v-if="item.zone_6 && zone.pin == 6" :key="zone.pin">
+                  <span class="badge badge-info">{{zone.name}}</span>
+                </div>
+              </template>
               
             </td>
             <td class="d-none d-sm-block">
