@@ -302,5 +302,26 @@ module.exports = {
             res.end();
             return (false);
         });
+    },
+    getStatus: function(app) {
+        app.get(`/api/status`, (req, res) => {
+            // temp_mysql = new mysql_conection(function(err, connection) {
+            // if (err) throw err;
+            // connection.query(`SELECT * FROM ${table}`, function (err, result, fields) {
+            //     if (err) {
+            //         res.status(400).send("Error when reading database");
+            //     }
+            //     else
+            //     {
+            //         res.json(result);
+            //     }
+            // });
+            // connection.release();
+            // });
+            
+            // result.summary = "Test";
+            // res.json(result);
+            res.send('Hello World!');
+        });
     }
 }

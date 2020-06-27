@@ -18,6 +18,23 @@ var timer;
 clearZones()
 lights.writeSync(0);
 
+exports.status = () => {
+    payload = {}
+    payload.master = master.readSync();
+    payload.v1 = v1.readSync();
+    payload.v2 = v2.readSync();
+    payload.v3 = v3.readSync();
+    payload.v4 = v4.readSync();
+    payload.v5 = v5.readSync();
+    payload.v6 = v6.readSync();
+    payload.lights = lights.readSync();
+    payload.et = weather.getEvapotranspiration();
+    payload.forecast = weather.getForecast();
+    payload.irrisat = weather.getIrrisat();
+
+    return payload;
+}
+
 myEmitter.on('watering', function(schedule_row) {
     console.log("watering: Start watering the following schedule");
     console.log(schedule_row);

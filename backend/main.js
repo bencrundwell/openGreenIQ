@@ -41,6 +41,9 @@ api.deleteZone(app);
 api.getEvents(app); 
 api.postWater(app);
 api.postScheduletest(app);
+//api.getStatus(app);
+
+app.get(`/api/status`, (req, res) => res.json(watering.status()) );
 
 
 app.listen(port, () => console.log(`listening on port ${port}!`));

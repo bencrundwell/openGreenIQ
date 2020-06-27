@@ -14,6 +14,8 @@ var rainfall_24h = 0;
 var cloud_24h = 0;
 var evapotranspiration_24h = 0;
 var temp = 0;
+var forecast = [];
+var irrisat = [];
     
 // IrriSAT API for ET0 lookup
 //https://irrisat-cloud.appspot.com/_ah/api/irrisat/v1/services/forecast/evapotranspiration/52.084621/0.026227
@@ -25,7 +27,7 @@ console.log('weather: load module');
 // get ET on boot
 request(irrisat_url)
     .then (function (body) {
-        var irrisat = JSON.parse(body);
+        irrisat = JSON.parse(body);
         evapotranspiration = irrisat.Daily[0].ET0;
         console.log (`evapotranspiration = ${evapotranspiration}mm/day`);
     })
@@ -36,7 +38,7 @@ myEmitter.on('hourTimer', function() {
 
     request(irrisat_url)
         .then (function (body) {
-            var irrisat = JSON.parse(body);
+            irrisat = JSON.parse(body);
             evapotranspiration = irrisat.Daily[0].ET0;
             console.log (`evapotranspiration = ${evapotranspiration}mm/day`);
             return request(ow_url);
@@ -47,23 +49,23 @@ myEmitter.on('hourTimer', function() {
         .then (function (body) {
             var d = new Date();
             console.log('body:', body);
-            var weather = JSON.parse(body);
+            forecast = JSON.parse(body);
             var rain = 0.0;
             var cloud = 0;
 
-            if (weather.rain)
-                if (weather.rain[ "1h" ])
-                    rain = weather.rain[ "1h" ];
+            if (forecast.rain)
+                if (forecast.rain[ "1h" ])
+                    rain = forecast.rain[ "1h" ];
             console.log( "rain:", rain, "mm");
 
-            if (weather.main.temp) temp = weather.main.temp
+            if (forecast.main.temp) temp = forecast.main.temp
 
-            if (weather.clouds.all)
-                cloud = weather.clouds.all;
+            if (forecast.clouds.all)
+                cloud = forecast.clouds.all;
 
             temp_mysql = new mysql_conection(function(err, connection) {
                 if (err) throw err;
-                connection.query(`UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${weather.main.temp}, evapotranspiration = ${evapotranspiration} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
+                connection.query(`UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${forecast.main.temp}, evapotranspiration = ${evapotranspiration} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
                     if (err) throw err;
                     console.log("openGreenIQ.weather : rain updated");
                 });
@@ -126,6 +128,15 @@ exports.getEvapotranspiration = function() {
 exports.getRainfall = function() {
     return rainfall_24h;
   };
+
+exports.getForecast = function() {
+    return forecast;
+};
+
+exports.getIrrisat = function() {
+    return irrisat;
+};
+
 
 //myEmitter.emit('hourTimer');
 //myEmitter.emit('dayTimer');
