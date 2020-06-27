@@ -40,8 +40,8 @@
         </thead>
          <tbody>
           <tr v-for="(zone, index) in events.zone" :key="index">
-            <template v-if="zones[zone.id]">
-              <td>{{zones[zone.id].name}}</td>
+            <template v-if="zone">
+              <td>{{zone.name}}</td>
               <td v-for="(day, index2)  in zone.day" :key="index2">{{day}}&nbsp;L</td>
             </template>
           </tr>
@@ -52,6 +52,7 @@
 </template>
  
 <script>
+//zones.find(z => z.pin == zones[zone.id])
 import MainChartExample from './dashboard/WateringChart'
 import { mapState } from 'vuex'
 
@@ -85,21 +86,25 @@ export default {
         data.day[day].zone = []
       }
 
-      for(let zone = 0; zone < 5; zone++)
-        {
-          data.zone[zone] = []
-          data.zone[zone].day = []
-          data.zone[zone].id = zone
+      zones.forEach(zone => {
+          let tempZone = {}
+          tempZone.day = []
+          tempZone.name = zone.name
+
           for(let day = 0; day < 7; day++)
           {
             let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day-1, 'days').startOf('day')))
             
-            data.zone[zone].day[day] = daysWateringEvents.filter(e => e.zone == zone+1).reduce((acc,val) => acc + val.value, 0)
-            // console.log("zone: " + zone + " day: " + day + " value: " + data.zone[zone].day[day])
+            tempZone.day[day] = daysWateringEvents.filter(e => e.zone == zone.pin).reduce((acc,val) => acc + val.value, 0)
+            //console.log("zone: " + zone + " day: " + day + " value: " + tempZone.day[day])
           }
-        }
-        //console.log(data.zone)
+          data.zone.push(tempZone)
+      });
       return data;
+    },
+    status() {
+      var status = this.$store.state.status;
+      return status;
     }
   },
 

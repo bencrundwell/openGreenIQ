@@ -5,7 +5,7 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { random } from '@/shared/utils'
 var moment = require('moment');
 
-let elements = 7
+let elements = 28
 const labels = []      
 let options = []
 const brandWarning = getStyle('--warning') || '#4dbd74'
