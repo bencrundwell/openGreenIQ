@@ -11,7 +11,8 @@ export default new Vuex.Store({
         schedule: [],
         zones: [],
         history: [],
-        events: []
+        events: [],
+        status: []
     },
     actions: {
         getSchedule ({ commit }) {
@@ -90,7 +91,14 @@ export default new Vuex.Store({
             .then(() => {
                 this.dispatch("getSchedule");
             })
-        }
+        },
+        getStatus ({ commit }) {
+            axios.get('http://ogiq:4000/api/status/')
+                .then(r => r.data)
+                .then(status => {
+                    commit('SET_STATUS', status)
+                })
+        }, 
     },
     mutations: {
         SET_SCHEDULE (state, payload) {
@@ -107,6 +115,9 @@ export default new Vuex.Store({
         },
         SET_HOURLY (state, payload) {
             state.hourly = payload
+        },
+        SET_STATUS (state, payload) {
+            state.status = payload
         }
     }
 })

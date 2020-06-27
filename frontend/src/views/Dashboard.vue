@@ -1,6 +1,13 @@
 <template>
   <div class="animated fadeIn">
 
+    <b-card v-if="events" id="watering-history" header-tag="header" footer-tag="footer">
+      <div slot="header">
+        <h4 class="card-title mb-0">System Status</h4>
+      </div>
+      <p>Status: {{status}}</p>
+    </b-card> 
+    
     <b-card>
       <b-row>
         <b-col sm="5">
@@ -113,6 +120,8 @@ export default {
     this.$store.dispatch("getEvents");
     this.$store.dispatch("getZones");
     this.$store.dispatch("getHourly");
+    this.$store.dispatch("getStatus");
+    setInterval(() => this.$store.dispatch("getStatus"), 1000);
   },
 
   data: function () {
