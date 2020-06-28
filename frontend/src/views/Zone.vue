@@ -23,6 +23,14 @@
                   <td>Area</td>
                   <td>{{zone.area}} m&sup2;</td>
                 </tr>
+                <tr>
+                  <td>Vegitation</td>
+                  <td>{{zone.vegitation == 1 ? "Short" : "Long"}}</td>
+                </tr>
+                <tr>
+                  <td>Adjust</td>
+                  <td>{{zone.adjust}}%</td>
+                </tr>
               </tbody>
             </table>
             <div class="float-right mb-0">
@@ -72,21 +80,51 @@
         </div>
       </div>
     </div>
+    <b-card header-tag="header" footer-tag="footer">
+      <div slot="header">
+        <h4 class="card-title mb-0">Event History</h4>
+      </div>
+      <!-- <b-table striped hover :items="events"></b-table> -->
+
+      <table class="table b-table table-striped table-hover">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Event</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in events" :key="item.id">
+            <td>
+              {{ formatDate(item.timestamp) }}
+            </td>
+            <td>
+              {{item.event}}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </b-card>
   </div>
 </template>
  
 <script>
 import { mapState } from "vuex";
+var moment = require('moment');
 
 export default {
   name: "zone",
   mounted() {
     this.$store.dispatch("getZones");
+    this.$store.dispatch("getEvents");
   },
 
   computed: {
     zone() {
       return this.$store.state.zones.find(z => z.pin == this.$route.params.pin);
+    },
+    events() {
+      return this.$store.state.events.filter(e => (e.zone == this.$route.params.pin) && (e.type == 1));
     }
   },
 
@@ -107,6 +145,9 @@ export default {
 
       return(true);
 
+    },
+    formatDate(date) {
+      return moment(date).format("ddd Do @ hh:mm")
     }
   }
 };

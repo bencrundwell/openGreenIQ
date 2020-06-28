@@ -1,11 +1,25 @@
 <template>
   <div class="animated fadeIn">
 
-    <b-card v-if="events" id="watering-history" header-tag="header" footer-tag="footer">
+    <b-card v-if="events" header-tag="header" footer-tag="footer">
       <div slot="header">
         <h4 class="card-title mb-0">System Status</h4>
       </div>
-      <p>Status: {{status}}</p>
+      <b-card-text>
+        <!-- <p>Status: {{status}}</p> -->
+        <p>Valve Status: 
+          <span v-if="status.master==1" class="badge badge-success">On</span><span v-if="status.master==0" class="badge badge-secondary">Off</span>&nbsp;
+          <span v-if="status.v1==1" class="badge badge-success">Valve 1 </span>
+          <span v-if="status.v2==1" class="badge badge-success">Valve 2 </span>
+          <span v-if="status.v3==1" class="badge badge-success">Valve 3 </span>
+          <span v-if="status.v4==1" class="badge badge-success">Valve 4 </span>
+          <span v-if="status.v5==1" class="badge badge-success">Valve 5 </span>
+          <span v-if="status.v6==1" class="badge badge-success">Valve 6 </span>
+        </p>
+        <p v-if="status && status.flow_rate_avg != undefined">Flow Rate: {{status.flow_rate_avg.toFixed(2)}} lpm</p>
+        <p v-if="status && status.irrisat && status.irrisat.Daily">Weather Today: {{status.irrisat.Daily[0].Description}}</p>
+        <p v-if="status && status.irrisat">Weather Next Week: {{status.irrisat.NextWeek}}</p>
+      </b-card-text>
     </b-card> 
     
     <b-card>

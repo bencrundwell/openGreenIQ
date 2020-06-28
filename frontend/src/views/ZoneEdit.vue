@@ -19,6 +19,16 @@
             <b-input-group prepend="Area" append="m²" class="my-3">
               <b-form-input v-model="zone.area"></b-form-input>
             </b-input-group>
+            <b-input-group prepend="Vegitation" class="my-3">
+              <b-form-select
+                v-model="zone.vegitation"
+                :options="vegitationTypes"
+              ></b-form-select>
+            </b-input-group>
+
+            <b-input-group prepend="Adjust" append="%" class="my-3">
+              <b-form-input v-model="zone.adjust"></b-form-input>
+            </b-input-group>
             
             <b-button v-on:click="onCancel()">
               <i class="fa fa-window-close-o"></i>&nbsp;Cancel
@@ -47,6 +57,14 @@ import { mapState } from "vuex";
 
 export default {
   name: "ZoneEdit",
+  data() {
+    return {
+      vegitationTypes: [
+        { value: '0', text: 'Long' },
+        { value: '1', text: 'Short' }
+      ]
+    }
+  },
   mounted() {
     console.log("mounted()");
     this.$store.dispatch("getSchedule");

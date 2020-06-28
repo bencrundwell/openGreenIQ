@@ -23,6 +23,7 @@ export default {
       let rainfallData = []
       let temperatureData = []
       let evapotranspirationData = []
+      let evapotranspirationShortData = []
 
       //console.log("function")
       const history = this.$store.state.history;
@@ -40,6 +41,7 @@ export default {
         rainfallData[i] = result[i].rainfall
         temperatureData[i] = result[i].temp
         evapotranspirationData[i] = result[i].evapotranspiration
+        evapotranspirationShortData[i] = result[i].evapotranspiration_short
         labels[i] = moment(result[i].date).format("ddd")
       }
 
@@ -48,18 +50,22 @@ export default {
         let rainfallToday = 0
         let temperatureToday = 0
         let evapotranspirationToday = 0
+        let evapotranspirationShortToday = 0
         this.$store.state.hourly.forEach((h) => {
           rainfallToday += h.rain
           temperatureToday += h.temp
           evapotranspirationToday += h.evapotranspiration
+          evapotranspirationShortToday += h.evapotranspiration_short
         });
         rainfallToday /= 24;
         temperatureToday /= 24;
         evapotranspirationToday /= 24;
+        evapotranspirationShortToday /= 24;
 
         rainfallData[i] = rainfallToday
         temperatureData[i] = temperatureToday
         evapotranspirationData[i] = evapotranspirationToday
+        evapotranspirationShortData[i] = evapotranspirationShortToday
         labels[i] = moment().format("ddd")
       }
       //console.log("data: " + temperatureData)
@@ -84,12 +90,20 @@ export default {
             data: rainfallData
           },
           {
-            label: 'Evapotranspiration',
+            label: 'Evapotranspiration (L)',
             backgroundColor: hexToRgba(brandDanger, 10),
             borderColor: brandDanger,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: evapotranspirationData
+          },
+          {
+            label: 'Evapotranspiration (S)',
+            backgroundColor: hexToRgba(brandDanger, 10),
+            borderColor: brandDanger,
+            pointHoverBackgroundColor: '#fff',
+            borderWidth: 2,
+            data: evapotranspirationShortData
           }
         ]
       }, options)
@@ -101,7 +115,7 @@ export default {
     this.$store.dispatch('getHourly')
     this.$store.subscribe((mutation, state) => {
       
-      console.log(`subscribe ${mutation.type}`);
+      //console.log(`subscribe ${mutation.type}`);
 
       switch(mutation.type) {
         case 'SET_HISTORY':
