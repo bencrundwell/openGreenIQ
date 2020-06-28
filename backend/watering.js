@@ -3,6 +3,7 @@ var mysql_conection = require('./mysql');
 const Gpio = require('onoff').Gpio;
 const util = require('util')
 var weather = require('./weather');
+var gpio = require('rpi-gpio');
 
 const master = new Gpio(24, 'out');
 const v1 = new Gpio(4, 'out');
@@ -28,9 +29,12 @@ exports.status = () => {
     payload.v5 = v5.readSync();
     payload.v6 = v6.readSync();
     payload.lights = lights.readSync();
-    payload.et = weather.getEvapotranspiration();
+    payload.etLong = weather.getEvapotranspirationLong();
+    payload.etShort = weather.getEvapotranspirationShort();
     payload.forecast = weather.getForecast();
     payload.irrisat = weather.getIrrisat();
+    payload.flow_rate = flow_rate;
+    payload.flow_rate_avg = flow_rate_avg;
 
     return payload;
 }
@@ -65,8 +69,10 @@ function clearZones() {
 
 async function waterZone(zone, duration, callback) {
     console.log(`watering.waterZone: water zone ${zone} for ${duration} seconds`);
+    flow_counter = 0;
     if (duration >= 1 && duration < (60 * 60))
     {
+        clearZones();
         console.log(`enable master valve`);
         master.writeSync(1);
     
@@ -104,10 +110,13 @@ async function waterZone(zone, duration, callback) {
         zone_obj = await lookupZone(zone)
         const volume = parseFloat((duration/60) * zone_obj.avg_flow).toFixed(1)
         const message = [];
-        message.type = 1
-        message.event = `Water ${zone_obj.name} with ${volume}L`
-        message.zone = zone
-        message.value = volume
+        const flow = ((flow_counter/(duration/60))*0.00192953).toFixed(2);
+        console.log(`watering.waterzone: count = ${flow_counter}, duration = ${duration}, flow = ${flow}`);
+        message.type = 1;
+        message.event = `Water ${zone_obj.name} with ${volume}L, flow = ${flow}lpm`;
+        message.zone = zone;
+        message.value = volume;
+        message.value2 = flow;
         myEmitter.emit('log_event', message);
 
         clearZones();
@@ -132,9 +141,10 @@ function executeSchedule(id) {
                 message.event = `Execute Schedule ${id}`
                 message.zone = id
                 message.value = null
+                message.value2 = null
                 myEmitter.emit('log_event', message);
 
-                console.log("watering: executeSchedule: Current ET: " + weather.getEvapotranspiration())
+                console.log("watering: executeSchedule: Current ET: " + weather.getEvapotranspirationLong())
                 let schedule = result[0];
 
                 if (schedule.zone_6) schedule_zones.push(6)
@@ -176,7 +186,8 @@ async function lookupZone(id) {
                     if (result.length > 0) {
                         var zone = result[0];
                         console.log(`watering.lookupZone: zone = ${zone.name}`);
-                        zone.water_required = weather.getEvapotranspiration() - weather.getRainfall()
+                        if (zone.vegitation == 0) zone.water_required = weather.getEvapotranspirationLong() - weather.getRainfall();
+                        if (zone.vegitation == 1) zone.water_required = weather.getEvapotranspirationShort() - weather.getRainfall();
                         console.log(`watering.lookupZone: weather.getRainfall() = ${weather.getRainfall()}`);
                         console.log(`watering.lookupZone: zone.water_required = ${zone.water_required}`);
                         if (zone.water_required < 0) zone.water_required = 0
@@ -213,4 +224,44 @@ async function waterZoneAdjusted(id) {
             waterZoneAdjusted(schedule_zones.pop())    
         }
     }
+}
+
+// Flow rate sensing
+let watchdogInterval
+let flow_rate = 0
+let flow_rate_history = []
+let flow_rate_avg = 0
+let flow_counter = 0
+let hrtime = process.hrtime()
+let previous_time = hrtime[0] * 1000000 + hrtime[1] / 1000
+console.log("watering: Monitor flow pin...")
+
+gpio.setup(10, gpio.DIR_IN, gpio.EDGE_BOTH);
+
+gpio.on('change', function(channel, value) {
+    //console.log('Channel ' + channel + ' value is now ' + value);
+    if (channel == 10) {
+        hrtime = process.hrtime()
+        flow_counter++
+        const current_time = hrtime[0] * 1000000 + hrtime[1] / 1000
+        const time_difference = current_time - previous_time
+        flow_rate = 115772/time_difference
+        flow_rate_history.push(flow_rate);
+        if (flow_rate_history.length > 100) flow_rate_history.shift();
+        let average = (array) => array.reduce((a, b) => a + b) / array.length;
+        flow_rate_avg = average(flow_rate_history);
+        //console.log(`Flow: ${flow_rate}`)
+
+        clearInterval( watchdogInterval );
+        watchdogInterval = setTimeout( watchdogReset, 1 * 1000); // 1s watchdog timer
+
+        previous_time = current_time
+    }
+});
+
+function watchdogReset() {
+    flow_rate = 0;
+    flow_rate_avg = 0;
+    flow_rate_history = []
+    //console.log(`Flow: ${flow_rate}`);
 }

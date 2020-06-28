@@ -174,7 +174,7 @@ module.exports = {
         app.get(`/api/events`, (req, res) => {
             temp_mysql = new mysql_conection(function(err, connection) {
             if (err) throw err;
-            connection.query(`SELECT * FROM events ORDER BY id DESC LIMIT 50`, function (err, result, fields) {
+            connection.query(`SELECT * FROM events ORDER BY id DESC LIMIT 200`, function (err, result, fields) {
                 if (err) {
                     res.status(400).send("Error when reading database");
                 }
@@ -225,6 +225,8 @@ module.exports = {
                     ", name = '" + req.body.name + "'" +
                     ", avg_flow = " + req.body.avg_flow +
                     ", area = " + req.body.area +
+                    ", vegitation = " + req.body.vegitation +
+                    ", adjust = " + req.body.adjust +
                     " WHERE pin = " + req.body.pin;
                 
                 console.log("SQL: " + sql);
@@ -252,11 +254,13 @@ module.exports = {
 
                 console.log(req.body);
 
-                let sql = "INSERT INTO zones (pin, name, avg_flow, area) VALUES (" +
+                let sql = "INSERT INTO zones (pin, name, avg_flow, area, vegitation, adjust) VALUES (" +
                     req.body.pin +
                     ", " + req.body.name +
                     ", " + req.body.avg_flow +
                     ", " + req.body.area +
+                    ", " + req.body.vegitation +
+                    ", " + req.body.adjust +
                     ")";
                 
                 console.log("SQL: " + sql);
@@ -301,27 +305,6 @@ module.exports = {
             res.send('OK');
             res.end();
             return (false);
-        });
-    },
-    getStatus: function(app) {
-        app.get(`/api/status`, (req, res) => {
-            // temp_mysql = new mysql_conection(function(err, connection) {
-            // if (err) throw err;
-            // connection.query(`SELECT * FROM ${table}`, function (err, result, fields) {
-            //     if (err) {
-            //         res.status(400).send("Error when reading database");
-            //     }
-            //     else
-            //     {
-            //         res.json(result);
-            //     }
-            // });
-            // connection.release();
-            // });
-            
-            // result.summary = "Test";
-            // res.json(result);
-            res.send('Hello World!');
         });
     }
 }
