@@ -51,64 +51,74 @@ myEmitter.on('hourTimer', function() {
             console.log('irrisat error: ' + error);
         })
         .then (function (body) {
-            var d = new Date();
-            console.log('body:', body);
-            forecast = JSON.parse(body);
-            var rain = 0.0;
-            var cloud = 0;
+            if (body) {
+                var d = new Date();
+                console.log('body:', body);
+                forecast = JSON.parse(body);
+                var rain = 0.0;
+                var cloud = 0;
 
-            if (forecast.rain)
-                if (forecast.rain[ "1h" ])
-                    rain = forecast.rain[ "1h" ];
-            console.log( "rain:", rain, "mm");
+                if (forecast.rain)
+                    if (forecast.rain[ "1h" ])
+                        rain = forecast.rain[ "1h" ];
+                console.log( "rain:", rain, "mm");
 
-            if (forecast.main.temp) temp = forecast.main.temp
+                if (forecast.main.temp) temp = forecast.main.temp
 
-            if (forecast.clouds.all)
-                cloud = forecast.clouds.all;
+                if (forecast.clouds.all)
+                    cloud = forecast.clouds.all;
 
-            temp_mysql = new mysql_conection(function(err, connection) {
-                if (err) throw err;
-                connection.query(`UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${forecast.main.temp}, evapotranspiration = ${evapotranspirationLong}, evapotranspiration_short = ${evapotranspirationShort} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
+                temp_mysql = new mysql_conection(function(err, connection) {
                     if (err) throw err;
-                    console.log("openGreenIQ.weather : rain updated");
-                });
-                connection.release();
-            });
-
-            // look up 24h worth of data in hourly table
-            temp_mysql2 = new mysql_conection(function(err, connection) {
-                if (err) throw err;
-                connection.query(`SELECT * FROM db.hourly`, function (err, result, fields) {
-                    if (err) throw err;
-                    
-                    var rainfall_total = 0;
-                    var cloud_total = 0;
-                    var evapotranspirationShort_total = 0;
-                    var evapotranspirationLong_total = 0;
-        
-                    result.forEach(element => {
-                        if (element.rain > 0) {
-                            rainfall_total += element.rain;
-                        }
-                        if (element.cloud > 0) {
-                            cloud_total += element.cloud;
-                        }
-                        if (element.evapotranspiration > 0) {
-                            evapotranspirationLong_total += element.evapotranspiration;
-                        }
-                        if (element.evapotranspiration_short > 0) {
-                            evapotranspirationShort_total += element.evapotranspiration_short;
-                        }
+                    connection.query(`UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${forecast.main.temp}, evapotranspiration = ${evapotranspirationLong}, evapotranspiration_short = ${evapotranspirationShort} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
+                        if (err) throw err;
+                        console.log("openGreenIQ.weather : rain updated");
                     });
-
-                    rainfall_24h = rainfall_total;
-                    cloud_24h = cloud_total / 24;
-                    evapotranspirationShort_24h = evapotranspirationShort_total / 24;
-                    evapotranspirationLong_24h = evapotranspirationLong_total / 24;
+                    connection.release();
                 });
-                connection.release();
-            });
+
+                // look up 24h worth of data in hourly table
+                temp_mysql2 = new mysql_conection(function(err, connection) {
+                    if (err) throw err;
+                    connection.query(`SELECT * FROM db.hourly`, function (err, result, fields) {
+                        if (err) throw err;
+                        
+                        var rainfall_total = 0;
+                        var cloud_total = 0;
+                        var evapotranspirationShort_total = 0;
+                        var evapotranspirationLong_total = 0;
+            
+                        result.forEach(element => {
+                            if (element.rain > 0) {
+                                rainfall_total += element.rain;
+                            }
+                            if (element.cloud > 0) {
+                                cloud_total += element.cloud;
+                            }
+                            if (element.evapotranspiration > 0) {
+                                evapotranspirationLong_total += element.evapotranspiration;
+                            }
+                            if (element.evapotranspiration_short > 0) {
+                                evapotranspirationShort_total += element.evapotranspiration_short;
+                            }
+                        });
+
+                        rainfall_24h = rainfall_total;
+                        cloud_24h = cloud_total / 24;
+                        evapotranspirationShort_24h = evapotranspirationShort_total / 24;
+                        evapotranspirationLong_24h = evapotranspirationLong_total / 24;
+                    });
+                    connection.release();
+                });
+            }
+            else
+            {
+                // Retry in 1 second  
+                console.log('weather.hourTimer: irrisat failed, emit another hourTimer');
+                const timeoutObj = setTimeout(() => {
+                    myEmitter.emit("hourTimer");
+                }, 1000);
+            }
         });
 });
 
