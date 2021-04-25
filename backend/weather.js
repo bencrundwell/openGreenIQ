@@ -117,7 +117,7 @@ myEmitter.on('hourTimer', function() {
                 console.log('weather.hourTimer: irrisat failed, emit another hourTimer');
                 const timeoutObj = setTimeout(() => {
                     myEmitter.emit("hourTimer");
-                }, 1000);
+                }, 10000);
             }
         });
 });
