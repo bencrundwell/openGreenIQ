@@ -63,7 +63,7 @@
           <tr v-for="(zone, index) in events.zone" :key="index">
             <template v-if="zone">
               <td>{{zone.name}}</td>
-              <td v-for="(day, index2)  in zone.day" :key="index2">{{day}}&nbsp;L</td>
+              <td v-for="(day, index2)  in zone.day" :key="index2">{{ day }}</td>
             </template>
           </tr>
         </tbody>
@@ -116,7 +116,10 @@ export default {
           {
             let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day-1, 'days').startOf('day')))
             
-            tempZone.day[day] = daysWateringEvents.filter(e => e.zone == zone.pin).reduce((acc,val) => acc + val.value, 0)
+            let volume = daysWateringEvents.filter(e => e.zone == zone.pin).reduce((acc,val) => acc + val.value, 0)
+            if (volume >= 1) tempZone.day[day] = volume.toFixed(0) + " L";
+            else if (volume > 0) tempZone.day[day] = volume.toFixed(1) + " L";
+            else tempZone.day[day] = '-';
             //console.log("zone: " + zone + " day: " + day + " value: " + tempZone.day[day])
           }
           data.zone.push(tempZone)

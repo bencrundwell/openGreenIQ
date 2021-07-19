@@ -103,7 +103,8 @@ export default {
             borderColor: brandDanger,
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
-            data: evapotranspirationShortData
+            data: evapotranspirationShortData,
+            borderDash: [10,5]
           }
         ]
       }, options)
