@@ -1,7 +1,7 @@
 const request = require('request-promise');
 var myEmitter = require('./my_emitter');
 var mysql_conection = require('./mysql');
-const config = require('./config.json');
+const config = require('./config_custom.json');
 var Promise = require('promise');
 
 var con;

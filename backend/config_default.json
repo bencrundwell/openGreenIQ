@@ -8,15 +8,15 @@
     },
     "weather_config":
     {
-        "apiKey": "295f784636f873e16ec2ac1cef165df7",
-        "lat": 52.084621,
-        "lon": 0.026227
+        "apiKey": "xxxxxxxxx",
+        "lat": 1.23,
+        "lon": 4.56
     },
     "email_config":
     {
         "host": "smtp.example.com",
         "port": 587,
         "user": "user", 
-        "pass": "pass"
+        "pass": "password"
     }
 } 
