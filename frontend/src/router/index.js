@@ -4,9 +4,12 @@ import Router from 'vue-router'
 const DefaultContainer = () => import('@/containers/DefaultContainer')
 
 const Dashboard = () => import('@/views/Dashboard')
-const Schedule = () => import('@/views/Schedule')
+const ScheduleList = () => import('@/views/ScheduleList')
+const ScheduleEdit = () => import('@/views/ScheduleEdit')
+const ScheduleNew = () => import('@/views/ScheduleNew')
 const ZoneList = () => import('@/views/ZoneList')
 const Zone = () => import('@/views/Zone')
+const ZoneEdit = () => import('@/views/ZoneEdit')
 const History = () => import('@/views/History')
 
 Vue.use(Router)
@@ -28,23 +31,61 @@ export default new Router({
           component: Dashboard
         },
         {
-          path: 'schedule',
-          name: 'Schedule',
-          component: Schedule
-        },
-        {
-          path: 'zones',
-          name: 'Zones',
-          component: ZoneList
-        },
-        {
-          path: 'zones',
-          name: 'Zones',
-          component: Zone,
+          path: 'schedules',
+          name: 'Schedules',
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
           children: [
             {
+              path: '',
+              name: 'All Schedules',
+              component: ScheduleList,
+            },
+            {
+              path: 'add',
+              name: 'Add Schedule',
+              component: ScheduleNew
+            },{
               path: ':id',
-              name: 'Details'
+              name: 'Details',
+              component: ScheduleEdit,
+            }
+          ]
+        },
+        {
+          path: 'zones',
+          meta: {
+            label: 'Zones'
+          },
+          component: {
+            render(c) {
+              return c('router-view')
+            }
+          },
+          children: [
+            {
+              path: '',
+              name: 'All Zones',
+              component: ZoneList,
+            },
+            {
+              path: ':pin',
+              meta: {
+                label: 'Zone Details'
+              },
+              name: 'Zone',
+              component: Zone,
+            },
+            {
+              path: ':pin/edit',
+              meta: {
+                label: 'Edit Zone'
+              },
+              name: 'Zone',
+              component: ZoneEdit,
             }
           ]
         },

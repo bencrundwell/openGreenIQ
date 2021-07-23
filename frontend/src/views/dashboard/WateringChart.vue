@@ -5,7 +5,7 @@ import { CustomTooltips } from '@coreui/coreui-plugin-chartjs-custom-tooltips'
 import { random } from '@/shared/utils'
 var moment = require('moment');
 
-let elements = 14
+let elements = 28
 const labels = []      
 let options = []
 const brandWarning = getStyle('--warning') || '#4dbd74'
@@ -23,28 +23,53 @@ export default {
       let rainfallData = []
       let temperatureData = []
       let evapotranspirationData = []
+      let evapotranspirationShortData = []
 
-      console.log("function")
+      //console.log("function")
       const history = this.$store.state.history;
-      const startdate = moment().subtract(elements+1, "days")
+      const startdate = moment().subtract(elements, "days")
 
-      console.log(startdate)
+      //console.log(startdate)
 
       const result = history.filter(item => 
         moment(item.date).isAfter(startdate)
       ) 
 
-      console.log(result)
-
-      for (let i = 0; i < result.length; i++) {
+      //console.log(result)
+      let i=0;
+      for (i = 0; i < result.length; i++) {
         rainfallData[i] = result[i].rainfall
         temperatureData[i] = result[i].temp
         evapotranspirationData[i] = result[i].evapotranspiration
+        evapotranspirationShortData[i] = result[i].evapotranspiration_short
         labels[i] = moment(result[i].date).format("ddd")
       }
 
-      console.log("data: " + temperatureData)
+      // Add today to the graph from the hourly data
+      if (this.$store.state.hourly) {
+        let rainfallToday = 0
+        let temperatureToday = 0
+        let evapotranspirationToday = 0
+        let evapotranspirationShortToday = 0
+        this.$store.state.hourly.forEach((h) => {
+          rainfallToday += h.rain
+          temperatureToday += h.temp
+          // evapotranspirationToday += h.evapotranspiration
+          // evapotranspirationShortToday += h.evapotranspiration_short
+        });
+        rainfallToday /= 24;
+        temperatureToday /= 24;
+        evapotranspirationToday /= 24;
+        evapotranspirationShortToday /= 24;
 
+        rainfallData[i] = rainfallToday
+        temperatureData[i] = temperatureToday
+        // evapotranspirationData[i] = evapotranspirationToday
+        // evapotranspirationShortData[i] = evapotranspirationShortToday
+        labels[i] = moment().format("ddd")
+      }
+      //console.log("data: " + temperatureData)
+      
       this.renderChart({
         labels,
         datasets: [
@@ -63,15 +88,24 @@ export default {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: rainfallData
-          },
-          {
-            label: 'Evapotranspiration',
-            backgroundColor: hexToRgba(brandDanger, 10),
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: evapotranspirationData
           }
+          // {
+          //   label: 'Evapotranspiration (L)',
+          //   backgroundColor: hexToRgba(brandDanger, 10),
+          //   borderColor: brandDanger,
+          //   pointHoverBackgroundColor: '#fff',
+          //   borderWidth: 2,
+          //   data: evapotranspirationData
+          // },
+          // {
+          //   label: 'Evapotranspiration (S)',
+          //   backgroundColor: hexToRgba(brandDanger, 10),
+          //   borderColor: brandDanger,
+          //   pointHoverBackgroundColor: '#fff',
+          //   borderWidth: 2,
+          //   data: evapotranspirationShortData,
+          //   borderDash: [10,5]
+          // }
         ]
       }, options)
     }
@@ -79,13 +113,16 @@ export default {
 
   mounted () {
     this.$store.dispatch('getHistory')
-
+    this.$store.dispatch('getHourly')
     this.$store.subscribe((mutation, state) => {
       
-      console.log(`subscribe ${mutation.type}`);
+      //console.log(`subscribe ${mutation.type}`);
 
       switch(mutation.type) {
         case 'SET_HISTORY':
+          this.updateChart()
+          break
+        case 'SET_HOURLY':
           this.updateChart()
           break
       }

@@ -6,6 +6,7 @@ var weather = require('./weather');
 var api = require('./api');
 var mysql_conection = require('./mysql');
 var events_module = require('./events');
+var events_module = require('./email');
 
 var express = require('express');
 var cors = require('cors');
@@ -18,6 +19,7 @@ console.log("**** Start openGreenIQ Server ****");
 
 const app = express();
 console.log("Express Server Running...");
+console.log("WARNING: 'noET' branch selected");
 
 //watering.connectWeather(weather);
 
@@ -28,14 +30,22 @@ app.use(cors());
 const port = 4000;
 
 api.setup(app);
-// api.getSchedule(app);
 api.getTable(app, "history");
 api.getTable(app, "hourly");
 api.getTable(app, "zones");
-api.getTable(app, "schedule");
-api.getEvents(app);
+api.getSchedule(app);
+api.updateSchedule(app);
+api.addSchedule(app);
+api.deleteSchedule(app);
+api.updateZone(app); 
+api.addZone(app);
+api.deleteZone(app);
+api.getEvents(app); 
 api.postWater(app);
 api.postScheduletest(app);
+//api.getStatus(app);
+
+app.get(`/api/status`, (req, res) => res.json(watering.status()) );
 
 
 app.listen(port, () => console.log(`listening on port ${port}!`));
