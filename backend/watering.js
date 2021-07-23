@@ -134,7 +134,7 @@ async function waterZoneAdjusted(data) {
 
 async function lookupZone(id) {
     return new Promise(function(resolve, reject) {
-        console.log(`watering.lookupZone: id = ${id}`);
+        // console.log(`watering.lookupZone: id = ${id}`);
         temp_mysql = new mysql_conection(function(err, connection) {
             if (err) throw err;
             connection.query(`SELECT * FROM zones where pin = ${id}`, function (err, result, fields) {
@@ -145,7 +145,7 @@ async function lookupZone(id) {
                 }
                 else
                 {
-                    console.log(`watering.lookupZone: result: ` + util.inspect(result, {showHidden: false, depth: null}))
+                    // console.log(`watering.lookupZone: result: ` + util.inspect(result, {showHidden: false, depth: null}))
                     if (result.length > 0) {
                         var zone = result[0];
                         resolve(zone);
@@ -217,21 +217,6 @@ async function waterZone(zone, duration, callback) {
             myEmitter.emit('log_event', message);
             myEmitter.emit('email', message.event);
         }
-
-gpio.on('change', function(channel, value) {
-    //console.log('Channel ' + channel + ' value is now ' + value);
-    if (channel == 10) {
-        hrtime = process.hrtime()
-        flow_counter++
-        const current_time = hrtime[0] * 1000000 + hrtime[1] / 1000
-        const time_difference = current_time - previous_time
-        flow_rate = 115772/time_difference
-        flow_rate_history.push(flow_rate);
-        if (flow_rate_history.length > 100) flow_rate_history.shift();
-        let average = (array) => array.reduce((a, b) => a + b) / array.length;
-        flow_rate_avg = average(flow_rate_history);
-        //console.log(`Flow: ${flow_rate}`)
-
         message.type = 1;
         message.event = `Water ${zone_obj.name} with ${volume}L, flow = ${flow}lpm`;
         message.zone = zone;
