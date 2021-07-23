@@ -72,7 +72,7 @@ export default new Vuex.Store({
             axios.post('http://ogiq:4000/api/scheduletest/', payload)
         },
         updateSchedule({ commit }, payload) {
-            console.log ("store: action: addSchedule, payload: " + payload);
+            console.log ("store: action: updateSchedule, payload: " + payload);
             axios.put('http://ogiq:4000/api/schedule/', payload)
                 .then(() => {
                     this.dispatch("getSchedule");

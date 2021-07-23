@@ -17,7 +17,7 @@
                 </tr>
                 <tr>
                   <td>Average Flow</td>
-                  <td>{{zone.avg_flow}}</td>
+                  <td>{{zone.avg_flow}} L/m</td>
                 </tr>
                 <tr>
                   <td>Area</td>
@@ -44,8 +44,6 @@
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
       <div class="col-sm-12 col-md-6">
         <div class="card">
           <div class="card-header">Manual Override</div>
@@ -130,7 +128,7 @@ export default {
 
   data: function() {
     return {
-      time: null
+      time: 1.0
     }
   },
 

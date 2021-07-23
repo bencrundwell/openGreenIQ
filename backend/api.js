@@ -82,6 +82,7 @@ module.exports = {
                     ", day_sat = " + (req.body.day_sat ? 1 : 0) +
                     ", day_sun = " + (req.body.day_sun ? 1 : 0) +
                     ", start_time = " + req.body.start_time +
+                    ", water_mm = " + req.body.water_mm +
                     " WHERE id = " + req.body.id;
                 
                 console.log("SQL: " + sql);

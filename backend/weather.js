@@ -15,6 +15,9 @@ var rainfall_24h = 0;
 var cloud_24h = 0;
 var evapotranspirationShort_24h = 0;
 var evapotranspirationLong_24h = 0;
+var temperature_avg = 0;
+var temperature_max = 0;
+var temperature_min = 0;
 var temp = 0;
 var forecast = [];
 var irrisat = [];
@@ -26,30 +29,12 @@ var irrisat_url = `https://irrisat-cloud.appspot.com/_ah/api/irrisat/v1/services
 var ow_url = `http://api.openweathermap.org/data/2.5/weather?lat=${config.weather_config.lat}&lon=${config.weather_config.lon}&appid=${config.weather_config.apiKey}&units=metric`;
 
 console.log('weather: load module');
-// get ET on boot
-request(irrisat_url)
-    .then (function (body) {
-        irrisat = JSON.parse(body);
-        evapotranspirationShort = irrisat.Series.ET0short[0];
-        evapotranspirationLong = irrisat.Series.ET0tall[0];
-        // console.log (`evapotranspiration = ${evapotranspiration}mm/day`);
-    })
 
 myEmitter.on('hourTimer', function() {
 
     console.log('openGreenIQ.weather Check weather...');
 
-    request(irrisat_url)
-        .then (function (body) {
-            irrisat = JSON.parse(body);
-            evapotranspirationShort = irrisat.Series.ET0short[0];
-            evapotranspirationLong = irrisat.Series.ET0tall[0];
-            // console.log (`evapotranspiration = ${evapotranspiration}mm/day`);
-            return request(ow_url);
-        })
-        .catch (error => {
-            console.log('irrisat error: ' + error);
-        })
+    request(ow_url)
         .then (function (body) {
             if (body) {
                 var d = new Date();
@@ -70,7 +55,9 @@ myEmitter.on('hourTimer', function() {
 
                 temp_mysql = new mysql_conection(function(err, connection) {
                     if (err) throw err;
-                    connection.query(`UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${forecast.main.temp}, evapotranspiration = ${evapotranspirationLong}, evapotranspiration_short = ${evapotranspirationShort} WHERE id = ${d.getHours()+1}`, function (err, result, fields) {
+                    var query = `UPDATE db.hourly SET rain = ${rain}, cloud = ${cloud}, temp = ${forecast.main.temp}, evapotranspiration = ${evapotranspirationLong}, evapotranspiration_short = ${evapotranspirationShort} WHERE id = ${d.getHours()+1}`;
+                    console.log("openGreenIQ.weather : SQL : " + query);
+                    connection.query(query, function (err, result, fields) {
                         if (err) throw err;
                         console.log("openGreenIQ.weather : rain updated");
                     });
@@ -85,6 +72,7 @@ myEmitter.on('hourTimer', function() {
                         
                         var rainfall_total = 0;
                         var cloud_total = 0;
+                        var temperature_total = 0;
                         var evapotranspirationShort_total = 0;
                         var evapotranspirationLong_total = 0;
             
@@ -95,6 +83,11 @@ myEmitter.on('hourTimer', function() {
                             if (element.cloud > 0) {
                                 cloud_total += element.cloud;
                             }
+
+                            temperature_total += element.temp;
+                            if (element.temp > temperature_max) temperature_max = element.temp;
+                            if (element.temp < temperature_min) temperature_min = element.temp;
+
                             if (element.evapotranspiration > 0) {
                                 evapotranspirationLong_total += element.evapotranspiration;
                             }
@@ -105,6 +98,7 @@ myEmitter.on('hourTimer', function() {
 
                         rainfall_24h = rainfall_total;
                         cloud_24h = cloud_total / 24;
+                        temperature_avg = temperature_total / 24;
                         evapotranspirationShort_24h = evapotranspirationShort_total / 24;
                         evapotranspirationLong_24h = evapotranspirationLong_total / 24;
                     });
@@ -131,7 +125,9 @@ myEmitter.on('dayTimer', function() {
         console.log(`openGreenIQ.weather for yesterday: ${yesterday}...`);
         
         temp_mysql = new mysql_conection(function(err, connection) {
-            connection.query(`INSERT INTO db.history (date, rainfall, evapotranspiration, evapotranspiration_short, cloud, temp) VALUES ('${yesterday}', ${rainfall_24h}, ${evapotranspirationLong_24h}, ${evapotranspirationShort_24h}, ${cloud_24h}, ${temp})`, function (err, result, fields) {
+            var query = `INSERT INTO db.history (date, rainfall, evapotranspiration, evapotranspiration_short, cloud, temp) VALUES ('${yesterday}', ${rainfall_24h}, ${evapotranspirationLong_24h}, ${evapotranspirationShort_24h}, ${cloud_24h}, ${temperature_max})`;
+            console.log("openGreenIQ.weather : SQL : " + query);
+            connection.query(query, function (err, result, fields) {
                 if (err) throw err;
                 console.log("openGreenIQ.weather : history added");
             });
@@ -164,5 +160,5 @@ exports.getIrrisat = function() {
 };
 
 
-//myEmitter.emit('hourTimer');
-//myEmitter.emit('dayTimer');
+// myEmitter.emit('hourTimer');
+// myEmitter.emit('dayTimer');

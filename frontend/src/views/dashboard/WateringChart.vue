@@ -54,8 +54,8 @@ export default {
         this.$store.state.hourly.forEach((h) => {
           rainfallToday += h.rain
           temperatureToday += h.temp
-          evapotranspirationToday += h.evapotranspiration
-          evapotranspirationShortToday += h.evapotranspiration_short
+          // evapotranspirationToday += h.evapotranspiration
+          // evapotranspirationShortToday += h.evapotranspiration_short
         });
         rainfallToday /= 24;
         temperatureToday /= 24;
@@ -64,8 +64,8 @@ export default {
 
         rainfallData[i] = rainfallToday
         temperatureData[i] = temperatureToday
-        evapotranspirationData[i] = evapotranspirationToday
-        evapotranspirationShortData[i] = evapotranspirationShortToday
+        // evapotranspirationData[i] = evapotranspirationToday
+        // evapotranspirationShortData[i] = evapotranspirationShortToday
         labels[i] = moment().format("ddd")
       }
       //console.log("data: " + temperatureData)
@@ -88,24 +88,24 @@ export default {
             pointHoverBackgroundColor: '#fff',
             borderWidth: 2,
             data: rainfallData
-          },
-          {
-            label: 'Evapotranspiration (L)',
-            backgroundColor: hexToRgba(brandDanger, 10),
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: evapotranspirationData
-          },
-          {
-            label: 'Evapotranspiration (S)',
-            backgroundColor: hexToRgba(brandDanger, 10),
-            borderColor: brandDanger,
-            pointHoverBackgroundColor: '#fff',
-            borderWidth: 2,
-            data: evapotranspirationShortData,
-            borderDash: [10,5]
           }
+          // {
+          //   label: 'Evapotranspiration (L)',
+          //   backgroundColor: hexToRgba(brandDanger, 10),
+          //   borderColor: brandDanger,
+          //   pointHoverBackgroundColor: '#fff',
+          //   borderWidth: 2,
+          //   data: evapotranspirationData
+          // },
+          // {
+          //   label: 'Evapotranspiration (S)',
+          //   backgroundColor: hexToRgba(brandDanger, 10),
+          //   borderColor: brandDanger,
+          //   pointHoverBackgroundColor: '#fff',
+          //   borderWidth: 2,
+          //   data: evapotranspirationShortData,
+          //   borderDash: [10,5]
+          // }
         ]
       }, options)
     }

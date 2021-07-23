@@ -6,6 +6,7 @@ var weather = require('./weather');
 var api = require('./api');
 var mysql_conection = require('./mysql');
 var events_module = require('./events');
+var events_module = require('./email');
 
 var express = require('express');
 var cors = require('cors');
@@ -18,6 +19,7 @@ console.log("**** Start openGreenIQ Server ****");
 
 const app = express();
 console.log("Express Server Running...");
+console.log("WARNING: 'noET' branch selected");
 
 //watering.connectWeather(weather);
 

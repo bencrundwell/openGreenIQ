@@ -1,4 +1,12 @@
 // Here you can add other styles
+body {
+    touch-action: pan-x pan-y;
+}
+
+.col-form-label {
+    padding-bottom: 3px;
+}
+
 @media (max-width: 576px) { 
     .main .container-fluid {
         padding: 1px;
@@ -18,7 +26,7 @@
     #watering-history .card-body p {
         padding-left: 0.8rem;
         padding-top: 0.4rem;
-        display: none;
+        display: none; 
     }
 
     #watering-history .card-body table {
@@ -38,5 +46,6 @@
         margin-bottom: 0.5rem !important;
         width: 90px;
     }
+
 }
 

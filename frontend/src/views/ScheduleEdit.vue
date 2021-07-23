@@ -3,7 +3,7 @@
     <b-card header-tag="header" footer-tag="footer">
       <b-form @submit="onSubmit">
         <div slot="header">
-          <h4 class="card-title mb-0">Edit Watering Schedule</h4>
+          <h4 class="card-title mb-3">Edit Watering Schedule</h4>
         </div>
         <b-form-group
           id="input-group-1"
@@ -56,6 +56,10 @@
         >
           <b-form-timepicker v-model="time" value="item" locale="en"></b-form-timepicker>
         </b-form-group>
+
+        <b-input-group prepend="Water Volume" append="mm" class="my-3">
+          <b-form-input v-model="schedule.water_mm"></b-form-input>
+        </b-input-group>
         
         <b-button v-on:click="onCancel()">
           <i class="fa fa-window-close-o"></i>&nbsp;Cancel

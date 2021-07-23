@@ -62,7 +62,7 @@
          <tbody>
           <tr v-for="(zone, index) in events.zone" :key="index">
             <template v-if="zone">
-              <td>{{zone.name}}</td>
+              <td><router-link :to="'/zones/'+zone.pin">{{zone.name}}</router-link></td>
               <td v-for="(day, index2)  in zone.day" :key="index2">{{ day }}</td>
             </template>
           </tr>
@@ -111,6 +111,7 @@ export default {
           let tempZone = {}
           tempZone.day = []
           tempZone.name = zone.name
+          tempZone.pin = zone.pin
 
           for(let day = 0; day < 7; day++)
           {
@@ -131,14 +132,18 @@ export default {
       return status;
     }
   },
-
+  created () {
+    this.timer = setInterval(() => this.$store.dispatch("getStatus"), 1000);
+  },
   mounted () {
     //this.$store.dispatch('getHistory')
     this.$store.dispatch("getEvents");
     this.$store.dispatch("getZones");
     this.$store.dispatch("getHourly");
     this.$store.dispatch("getStatus");
-    setInterval(() => this.$store.dispatch("getStatus"), 1000);
+  },
+  beforeDestroy () {
+    clearInterval(this.timer);
   },
 
   data: function () {
