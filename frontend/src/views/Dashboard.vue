@@ -1,6 +1,27 @@
 <template>
   <div class="animated fadeIn">
 
+    <b-card v-if="events" header-tag="header" footer-tag="footer">
+      <div slot="header">
+        <h4 class="card-title mb-0">System Status</h4>
+      </div>
+      <b-card-text>
+        <!-- <p>Status: {{status}}</p> -->
+        <p>Valve Status: 
+          <span v-if="status.master==1" class="badge badge-success">On</span><span v-if="status.master==0" class="badge badge-secondary">Off</span>&nbsp;
+          <span v-if="status.v1==1" class="badge badge-success">Valve 1 </span>
+          <span v-if="status.v2==1" class="badge badge-success">Valve 2 </span>
+          <span v-if="status.v3==1" class="badge badge-success">Valve 3 </span>
+          <span v-if="status.v4==1" class="badge badge-success">Valve 4 </span>
+          <span v-if="status.v5==1" class="badge badge-success">Valve 5 </span>
+          <span v-if="status.v6==1" class="badge badge-success">Valve 6 </span>
+        </p>
+        <p v-if="status && status.flow_rate_avg != undefined">Flow Rate: {{status.flow_rate_avg.toFixed(2)}} lpm</p>
+        <p v-if="status && status.irrisat && status.irrisat.Daily">Weather Today: {{status.irrisat.Daily[0].Description}}</p>
+        <p v-if="status && status.irrisat">Weather Next Week: {{status.irrisat.NextWeek}}</p>
+      </b-card-text>
+    </b-card> 
+    
     <b-card>
       <b-row>
         <b-col sm="5">
@@ -20,7 +41,7 @@
       <main-chart-example chartId="main-chart" class="chart-wrapper" style="height:300px;margin-top:40px;" height="300"></main-chart-example>
     </b-card>
 
-    <b-card header-tag="header" footer-tag="footer">
+    <b-card v-if="events" id="watering-history" header-tag="header" footer-tag="footer">
       <div slot="header">
         <h4 class="card-title mb-0">Watering History</h4>
       </div>
@@ -38,20 +59,21 @@
             <th>{{events.day[0].name}}</th>
           </tr>
         </thead>
-        <tbody>
-          <tr v-for="zone in events.zone" :key="zone.id" v-bind:id="zone.id">
-            <td>{{zones[zone.id].name}}</td>
-            <td v-for="day in zone.day" :key="day">
-              {{day}} L
-            </td>
+         <tbody>
+          <tr v-for="(zone, index) in events.zone" :key="index">
+            <template v-if="zone">
+              <td><router-link :to="'/zones/'+zone.pin">{{zone.name}}</router-link></td>
+              <td v-for="(day, index2)  in zone.day" :key="index2">{{ day }}</td>
+            </template>
           </tr>
         </tbody>
       </table>
-    </b-card>
+    </b-card> 
   </div>
 </template>
  
 <script>
+//zones.find(z => z.pin == zones[zone.id])
 import MainChartExample from './dashboard/WateringChart'
 import { mapState } from 'vuex'
 
@@ -81,32 +103,47 @@ export default {
       for(let day = 0; day < 7; day++)
       {
         data.day[day] = []
-        data.day[day].name = moment().subtract(day+1, 'days').format("ddd")
+        data.day[day].name = moment().subtract(day, 'days').format("ddd")
         data.day[day].zone = []
       }
 
-      for(let zone = 0; zone < 5; zone++)
-        {
-          data.zone[zone] = []
-          data.zone[zone].day = []
-          data.zone[zone].id = zone
+      zones.forEach(zone => {
+          let tempZone = {}
+          tempZone.day = []
+          tempZone.name = zone.name
+          tempZone.pin = zone.pin
+
           for(let day = 0; day < 7; day++)
           {
-            let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day+1, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day, 'days').startOf('day')))
+            let daysWateringEvents = recentWateringEvents.filter(e => moment(e.timestamp).isAfter(moment().subtract(6-day, 'days').startOf('day')) && moment(e.timestamp).isBefore(moment().subtract(6-day-1, 'days').startOf('day')))
             
-            data.zone[zone].day[day] = daysWateringEvents.filter(e => e.zone == zone+1).reduce((acc,val) => acc + val.value, 0)
-            console.log("zone: " + zone + " day: " + day + " value: " + data.zone[zone].day[day])
+            let volume = daysWateringEvents.filter(e => e.zone == zone.pin).reduce((acc,val) => acc + val.value, 0)
+            if (volume >= 1) tempZone.day[day] = volume.toFixed(0) + " L";
+            else if (volume > 0) tempZone.day[day] = volume.toFixed(1) + " L";
+            else tempZone.day[day] = '-';
+            //console.log("zone: " + zone + " day: " + day + " value: " + tempZone.day[day])
           }
-        }
-        console.log(data.zone)
+          data.zone.push(tempZone)
+      });
       return data;
+    },
+    status() {
+      var status = this.$store.state.status;
+      return status;
     }
   },
-
+  created () {
+    this.timer = setInterval(() => this.$store.dispatch("getStatus"), 1000);
+  },
   mounted () {
     //this.$store.dispatch('getHistory')
     this.$store.dispatch("getEvents");
-    this.$store.dispatch('getZones')
+    this.$store.dispatch("getZones");
+    this.$store.dispatch("getHourly");
+    this.$store.dispatch("getStatus");
+  },
+  beforeDestroy () {
+    clearInterval(this.timer);
   },
 
   data: function () {
