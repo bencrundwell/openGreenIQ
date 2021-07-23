@@ -1,4 +1,6 @@
 # openGreenIQ
+[![Node.js CI](https://github.com/bencrundwell/openGreenIQ/actions/workflows/node.js.yml/badge.svg)](https://github.com/bencrundwell/openGreenIQ/actions/workflows/node.js.yml)
+
 Alternative firmware for a GreenIQ smart irrigation controller
 
 For detail on this project please see the [Project Wiki](https://github.com/bencrundwell/openGreenIQ/wiki)
