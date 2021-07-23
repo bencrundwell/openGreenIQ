@@ -31,9 +31,10 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci --prefix frontend
-    - run: npm run build --if-present --prefix frontend
+    - name: Build frontend
+      run: npm run build --if-present --prefix frontend
     - name: Store Artifacts
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: my-artifact
         path: frontend/dist
