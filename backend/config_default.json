@@ -1,0 +1,22 @@
+{
+    "database_config":
+    {
+        "host": "ogiq",
+        "user": "ogiq",
+        "password": "ogiqp@55",
+        "database": "db"
+    },
+    "weather_config":
+    {
+        "apiKey": "xxxxxxxxx",
+        "lat": 1.23,
+        "lon": 4.56
+    },
+    "email_config":
+    {
+        "host": "smtp.example.com",
+        "port": 587,
+        "user": "user", 
+        "pass": "password"
+    }
+} 
