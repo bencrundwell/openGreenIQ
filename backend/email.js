@@ -1,7 +1,7 @@
 "use strict";
 const nodemailer = require("nodemailer");
 var myEmitter = require('./my_emitter');
-const config = require('./config.json');
+const config = require('./config_custom.json');
 
 // async..await is not allowed in global scope, must use a wrapper
 myEmitter.on('email', async function(message) {
