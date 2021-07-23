@@ -3,8 +3,8 @@
     <div class="row">
       <div v-for="item in zones" :key="item.id" class="col-sm-6 col-lg-4" >
         <div class="brand-card">
-          <div class="brand-card-header h2">
-            {{item.pin }}: {{ item.name }}
+          <div class="brand-card-header h2 text-center mx-1">
+            {{ item.name }}
           </div>
           <div class="brand-card-body">
             <div>

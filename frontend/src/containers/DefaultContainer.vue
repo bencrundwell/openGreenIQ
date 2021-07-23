@@ -8,7 +8,7 @@
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
       <b-navbar-nav class="ml-auto">
-        <DefaultHeaderDropdownAccnt/>
+        <!-- <DefaultHeaderDropdownAccnt/> -->
       </b-navbar-nav>
     </AppHeader>
     <div class="app-body">
@@ -20,8 +20,8 @@
         <SidebarMinimizer/>
       </AppSidebar>
       <main class="main">
-        <Breadcrumb :list="list"/>
-        <div class="container-fluid">
+        <!-- <Breadcrumb :list="list"/> -->
+        <div class="container-fluid pt-4">
           <router-view></router-view>
         </div>
       </main>

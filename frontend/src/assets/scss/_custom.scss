@@ -1,1 +1,51 @@
 // Here you can add other styles
+body {
+    touch-action: pan-x pan-y;
+}
+
+.col-form-label {
+    padding-bottom: 3px;
+}
+
+@media (max-width: 576px) { 
+    .main .container-fluid {
+        padding: 1px;
+    }
+
+    .chart-wrapper {
+        margin-top:0px;
+        
+    }
+
+    // Watering History card on Dashbaord
+    #watering-history .card-body {
+        padding: 0rem;
+        overflow-x: scroll;
+    }
+    
+    #watering-history .card-body p {
+        padding-left: 0.8rem;
+        padding-top: 0.4rem;
+        display: none; 
+    }
+
+    #watering-history .card-body table {
+        font-size: 12pt;
+        margin-bottom: 0rem;
+    }
+
+
+    // Watering Schedule card on Schedule
+    #watering-schedule .card-body {
+        padding: 0rem;
+        overflow-x: scroll;
+    }
+    
+    #watering-schedule .card-body button,
+    #watering-schedule .card-body a{
+        margin-bottom: 0.5rem !important;
+        width: 90px;
+    }
+
+}
+
