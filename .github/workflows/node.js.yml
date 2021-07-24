@@ -31,6 +31,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm ci --prefix frontend
+    - name: Lint
+      run: npm run lint --if-present --prefix frontend
     - name: Build frontend
       run: npm run build --if-present --prefix frontend
     - name: Store Artifacts
